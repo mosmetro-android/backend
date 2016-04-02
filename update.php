@@ -7,23 +7,21 @@
         $url = $branches[$branch]['url'];
         
         if (empty($url)) {
-           echo "Not found";
-           return;
+           echo "Not found"; return;
         }
         
         $query = "INSERT INTO mosmetro_update_stat(branch)" .
 		" VALUES ('" . $branch . "')";
 	mysqli_query($mysqli, $query);
         
-        $apk = file_get_contents($url);
+        $apk = cached_retriever($url, 0);
         
         header("Content-Type: application/octet-stream");
         header("Content-Disposition: attachment; filename=\"MosMetro-" . 
                 $branch . "-signed.apk\"");
         header("Content-Length: " . strlen($apk));
         
-        echo $apk;
-        return;
+        echo $apk; return;
     }
     
     foreach (array_keys($branches) as $branch) {
