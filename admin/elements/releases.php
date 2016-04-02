@@ -20,6 +20,7 @@
             <td>version</td>
             <td>build</td>
             <td>by_build</td>
+            <td>downloads</td>
         </tr>
     
         <?php
@@ -31,7 +32,8 @@
                     "\">" . $branch . "</a></td>" .
                     "<td>" . $branches[$branch]['version'] . "</td>" .
                     "<td>" . $branches[$branch]['build'] . "</td>" .
-                    "<td>" . $branches[$branch]['by_build'] . "</td></tr>";
+                    "<td>" . $branches[$branch]['by_build'] . "</td>" .
+                    "<td>" . $branches[$branch]['downloads'] . "</td></tr>";
             }
         ?>
     </table>

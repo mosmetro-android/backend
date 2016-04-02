@@ -11,6 +11,10 @@
            return;
         }
         
+        $query = "INSERT INTO mosmetro_update_stat(branch)" .
+		" VALUES ('" . $branch . "')";
+	mysqli_query($mysqli, $query);
+        
         $apk = file_get_contents($url);
         
         header("Content-Type: application/octet-stream");

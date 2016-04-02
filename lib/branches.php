@@ -15,10 +15,22 @@
             $branches[$branch]['by_build'] = $row['by_build'];
             $branches[$branch]['url'] = $row['url'];
             $branches[$branch]['message'] = $row['message'];
+            $branches[$branch]['downloads'] = 0;
         }
     }
     
-    $json = file_get_contents("https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/master/lastSuccessfulBuild/api/json?pretty=true");
+    // Получаем количество скачиваний через внутреннюю систему обновления
+    
+    $query = "SELECT * FROM `mosmetro_update_stat` ORDER BY `id` DESC";
+    $result = mysqli_query($mysqli, $query);
+    
+    while ($row = mysqli_fetch_array($result)) {
+        $branches[$row['branch']]['downloads']++;
+    }
+    
+    // ------------------------------------------------------------------
+    
+    $json = file_get_contents("https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/master/lastSuccessfulBuild/api/json");
     $jenkins = json_decode($json, true);
     
     $branches['master']['version'] = 0;
