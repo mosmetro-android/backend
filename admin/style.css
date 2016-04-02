@@ -1,0 +1,28 @@
+body {
+	background: #BAC4C5;
+}
+
+div {
+	float: left;
+	padding: 10px;
+	margin: 5px;
+	background: #e7edee;
+	border-radius: 16px;
+}
+
+.content {
+	text-align: center;
+	border: 2px solid #909898;
+	background: #e7edee;
+}
+
+.element {
+	min-width: 300px;
+	min-height: 0px;
+	border: 2px solid #ADABAB;
+	background: #FFFFFF;
+}
+
+#settings {
+	text-align: left;
+}
