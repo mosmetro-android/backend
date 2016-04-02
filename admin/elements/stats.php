@@ -18,15 +18,25 @@
 		 */
 
 		$query = "SELECT * FROM `mosmetro_stat` WHERE `date` > DATE_SUB(NOW(), INTERVAL 1 MONTH) ORDER BY `id` ASC";
-		$all = mysqli_query($mysqli, $query);
-		print("Total: " . mysqli_num_rows($all) . "<br>");
-
-		$versions = array();
-		$networks = array();
-		while($row = mysqli_fetch_array($all)) {
-			$versions[$row['version']] = 1;
-			$networks[$row['ssid']] = 1;
+		
+		if (!apc_exists($query)) {
+			$res = mysqli_query($mysqli, $query);
+		
+			$all = array();
+			$all['num'] = mysqli_num_rows($res);
+			$all['versions'] = array();
+			$all['networks'] = array();
+			while($row = mysqli_fetch_array($res)) {
+				$all['versions'][$row['version']] = 1;
+				$all['networks'][$row['ssid']] = 1;
+			}
+			
+			apc_store($query, new ArrayObject($all), 30*60);
+		} else {
+			$all = apc_fetch($query)->getArrayCopy();
 		}
+		
+		print("Total: " . $all['num'] . "<br>");
 	?>
 	<span id="settings">
 		<form>
@@ -40,7 +50,7 @@
 				<option selected value="">Все версии</option>
 
 				<?php
-					foreach(array_keys($versions) as $version) {
+					foreach(array_keys($all['versions']) as $version) {
 						echo "<option value=\"" . $version . "\">" . $version . "</option>";
 					}
 				?>
@@ -61,7 +71,7 @@
 				<option selected value="">Все сети</option>
 
 				<?php
-					foreach(array_keys($networks) as $network) {
+					foreach(array_keys($all['networks']) as $network) {
 						echo "<option value=\"" . $network . "\">" . $network . "</option>";
 					}
 				?>

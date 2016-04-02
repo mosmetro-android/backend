@@ -16,28 +16,33 @@
 	
 	// Показать последний $interval (MySQL), поделенный по $index (field)
 	function get_data ($mysqli, $interval, $index) {
-		$query = "SELECT `date`
-					FROM `mosmetro_stat`
-					WHERE `date` > DATE_SUB(NOW(), INTERVAL " . $interval . ")";
+		$query = "SELECT `date` FROM `mosmetro_stat` WHERE `date` > DATE_SUB(NOW(), INTERVAL " . $interval . ")";
 		
 		if (!empty($_GET['automatic']))
 		    $query = $query . " AND `automatic` = " . $_GET['automatic'];
 		if (!empty($_GET['version']))
 		    $query = $query . " AND `version` = '" . $_GET['version'] . "'";
-	    if (!empty($_GET['connected']))
+	    	if (!empty($_GET['connected']))
 		    $query = $query . " AND `connected` = " . $_GET['connected'];
 		if (!empty($_GET['ssid']))
 		    $query = $query . " AND `ssid` = '" . $_GET['ssid'] . "'";
 		
 		$query = $query . " ORDER BY `id` ASC";
-		$res = mysqli_query($mysqli, $query);
+		
+		if (!apc_exists($query)) {
+			$res = mysqli_query($mysqli, $query);
 	
-		$data = array();
-		while($row = mysqli_fetch_array($res)) {
-			$date = date_parse($row['date']);
-			$id = $date[$index];
-			if (empty($data[$id])) $data[$id] = 0;
-			$data[$id]++;
+			$data = array();
+			while($row = mysqli_fetch_array($res)) {
+				$date = date_parse($row['date']);
+				$id = $date[$index];
+				if (empty($data[$id])) $data[$id] = 0;
+				$data[$id]++;
+			}
+			
+			apc_store($query, new ArrayObject($data), 30*60);
+		} else {
+			$data = apc_fetch($query)->getArrayCopy();
 		}
 		
 		return $data;
