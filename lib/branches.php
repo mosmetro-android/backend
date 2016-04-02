@@ -33,7 +33,7 @@
     
     // Получаем информацию о бранче master из Jenkins-CI
     
-    $json = cached_retriever("https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/master/lastSuccessfulBuild/api/json", 5*60);
+    $json = cached_retriever("https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/master/lastSuccessfulBuild/api/json", 30*60);
     $jenkins = json_decode($json, true);
     
     $branches['master']['version'] = 0;
