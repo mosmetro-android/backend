@@ -1,4 +1,5 @@
 <?php
+    include "../config.php";
     include "cache.php";
    
     $query = "SELECT * FROM `mosmetro_release` ORDER BY `id` DESC";
@@ -39,16 +40,25 @@
     // ------------------------------------------------------------------
     
     // Получаем информацию о бранче master из Jenkins-CI
+    function add_branch_from_jenkins(&$branches, $name) {
+        $json = cached_retriever("https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/" . $name . "/lastSuccessfulBuild/api/json", 30*60);
+        $jenkins = json_decode($json, true);
     
-    $json = cached_retriever("https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/master/lastSuccessfulBuild/api/json", 30*60);
-    $jenkins = json_decode($json, true);
-    
-    $branches['master']['version'] = 0;
-    $branches['master']['build'] = $jenkins['actions'][2]['buildsByBranchName']['origin/master']['buildNumber'];
-    $branches['master']['by_build'] = 1;
-    $branches['master']['url'] = "https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/master/lastSuccessfulBuild/artifact/" . $jenkins['artifacts'][0]['relativePath'];
-    $branches['master']['message'] = "Сборка #" . $branches['master']['build'] . " (" . date("d.m.y H:m:s", $jenkins['timestamp'] / 1000) . ") ветки master. Об изменениях вы можете узнать из репозитория GitHub (ссылка в настройках приложения).";
-    
+        $branches[$name]['version'] = 0;
+        $branches[$name]['build'] = $jenkins['actions'][2]['buildsByBranchName']['origin/' . $name]['buildNumber'];
+        $branches[$name]['by_build'] = 1;
+        $branches[$name]['url'] = "https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/" . $name . "/lastSuccessfulBuild/artifact/"
+           . $jenkins['artifacts'][0]['relativePath'];
+        $branches[$name]['message'] = "Сборка #" . $branches['master']['build'] . " (" . date("d.m.y H:m:s", $jenkins['timestamp'] / 1000)
+            . ") ветки " . $name . ". Об изменениях вы можете узнать из репозитория GitHub (ссылка в настройках приложения).";
+    }
+
+    add_branch_from_jenkins($branches, "master");
+    add_branch_from_jenkins($branches, "experimental");
+    add_branch_from_jenkins($branches, "mosgortrans");
+
     // ------------------------------------------------------------------
 
+    // Режим отладки
+    if (!empty($_GET['debug'])) print_r($branches);
 ?>
