@@ -49,7 +49,7 @@
         $branches[$name]['by_build'] = 1;
         $branches[$name]['url'] = "https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/" . $name . "/lastSuccessfulBuild/artifact/"
            . $jenkins['artifacts'][0]['relativePath'];
-        $branches[$name]['message'] = "Сборка #" . $branches['master']['build'] . " (" . date("d.m.y H:m:s", $jenkins['timestamp'] / 1000)
+        $branches[$name]['message'] = "Сборка #" . $branches[$name]['build'] . " (" . date("d.m.y H:m:s", $jenkins['timestamp'] / 1000)
             . ") ветки " . $name . ". Об изменениях вы можете узнать из репозитория GitHub (ссылка в настройках приложения).";
     }
 
