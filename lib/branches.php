@@ -30,7 +30,7 @@
     
     // Получаем количество скачиваний через внутреннюю систему обновления
     
-    $query = "SELECT * FROM `mosmetro_update_stat` ORDER BY `id` DESC";
+    $query = "SELECT * FROM `mosmetro_update_stat` WHERE `date` > DATE_SUB(NOW(), INTERVAL 1 DAY) ORDER BY `id` DESC";
     $result = mysqli_query($mysqli, $query);
     
     while ($row = mysqli_fetch_array($result)) {
