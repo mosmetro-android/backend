@@ -1,5 +1,5 @@
 <?php
-	include '../config.php';
+	include __DIR__ . '/../config.php';
 
 	if (!empty($_GET['show_log'])) {
 		$query = "SELECT * FROM `mosmetro_report` WHERE id=" . $_GET['show_log'];

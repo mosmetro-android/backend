@@ -1,5 +1,5 @@
 <?php
-    include "../config.php";
+    include __DIR__ . '/../config.php';
     include "cache.php";
    
     $query = "SELECT * FROM `mosmetro_release` ORDER BY `id` DESC";

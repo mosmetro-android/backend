@@ -23,8 +23,8 @@
         </tr>
     
         <?php
-            include '../config.php';
-            include '../lib/branches.php';
+            include __DIR__ . '/../../config.php';
+            include __DIR__ . '/../../lib/branches.php';
         
             foreach (array_keys($branches) as $branch) {
                 echo "<tr><td><a href=\"" . $branches[$branch]['url'] . 

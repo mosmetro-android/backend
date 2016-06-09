@@ -6,7 +6,7 @@
     
     <body>
         <?php
-            include '../config.php';
+            include __DIR__ . '/../config.php';
     
             $branch = $_POST['branch'];
             $version = $_POST['version'];
