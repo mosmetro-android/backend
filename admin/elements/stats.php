@@ -17,7 +17,7 @@
 		 *  Общая статистика
 		 */
 
-		$query = "SELECT * FROM `mosmetro_stat` WHERE `date` > DATE_SUB(NOW(), INTERVAL 1 MONTH) ORDER BY `id` ASC";
+		$query = "SELECT * FROM `mosmetro_stat` WHERE `date` > DATE_SUB(NOW(), INTERVAL 1 WEEK) ORDER BY `id` ASC";
 		
 		if (!apc_exists($query)) {
 			$res = mysqli_query($mysqli, $query);
