@@ -34,5 +34,9 @@
                     "<td>" . $branches[$branch]['downloads'] . "</td></tr>";
             }
         ?>
+
+        <form method="get" action="recache.php">
+            <input type="submit" value="Перезаполнить кэш">
+        </form>
     </table>
 </div>
