@@ -27,7 +27,7 @@
         $jenkins = json_decode($json, true);
     
         $branches[$name]['version'] = 0;
-        $branches[$name]['build'] = $jenkins['actions'][2]['buildsByBranchName']['origin/' . $name]['buildNumber'];
+        $branches[$name]['build'] = $jenkins['actions'][1]['buildsByBranchName']['origin/' . $name]['buildNumber'];
         $branches[$name]['by_build'] = 1;
         $branches[$name]['url'] = "https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/" . $name . "/lastSuccessfulBuild/artifact/"
            . $jenkins['artifacts'][0]['relativePath'];
