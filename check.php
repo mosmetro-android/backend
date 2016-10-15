@@ -33,6 +33,7 @@
 	file_get_contents("https://thedrhax.pw/piwik/piwik.php?"
 			. "idsite=6&"
 			. "rec=1&"
+			. "token_auth=a2176dc663545fb23a95b6aa9d7e6765&"
 			. "cip=" . $_SERVER['REMOTE_ADDR'] . "&"
 			. "url=http%3a%2f%2fwi-fi.metro-it.com%3acheck.php&"
 			. "url=" . urlencode("http://wi-fi.metro-it.com/check.php") . "&"
