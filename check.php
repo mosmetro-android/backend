@@ -37,9 +37,6 @@
 			. "cip=" . $_SERVER['REMOTE_ADDR'] . "&"
 			. "url=http%3a%2f%2fwi-fi.metro-it.com%3acheck.php&"
 			. "url=" . urlencode("http://wi-fi.metro-it.com/check.php") . "&"
-			. "dimension1=" . $version . "&"
-			. "dimension2=" . $ssid . "&"
-			. "dimension3=" . ($connected ? "true" : "false") . "&"
 			. "_cvar=" . json_encode($data)
 	);
 ?>
