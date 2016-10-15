@@ -23,5 +23,19 @@
 	$query = "INSERT INTO mosmetro_stat(version, automatic, connected, ssid)" .
 		" VALUES ('" . $version . "', " . $automatic . ", " . $connected . ", '" . $ssid . "')";
 	mysqli_query($mysqli, $query);
+
+	$data = [
+		"1" => ["version", $version],
+		"2" => ["ssid", $ssid],
+		"3" => ["success", $connected ? True : False]
+	]
+
+	file_get_contents("https://thedrhax.pw/piwik/piwik.php?"
+			. "idsite=6&"
+			. "rec=1&"
+			. "cip=" . $_SERVER['REMOTE_ADDR'] . "&"
+			. "url=http%3a%2f%2fwi-fi.metro-it.com%3acheck.php&"
+			. "url=" . urlencode("http://wi-fi.metro-it.com/check.php") . "&"
+			. "_cvar=" . json_encode($data))
 ?>
 
