@@ -17,7 +17,12 @@
 		$ssid = "MosMetro_Free";
 	}
 
-	$version = $_POST['version'];
+	if (!empty($_POST['version']) {
+		$version = $_POST['version'];
+	} else {
+		exit();
+	}
+
 	$connected = $_POST['connected'];
 
 	$query = "INSERT INTO mosmetro_stat(version, automatic, connected, ssid)" .
