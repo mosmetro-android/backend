@@ -27,7 +27,7 @@
 	$data = [
 		"1" => ["version", $version],
 		"2" => ["ssid", $ssid],
-		"3" => ["success", $connected ? True : False]
+		"3" => ["success", $connected ? "true" : "false"]
 	];
 
 	file_get_contents("https://thedrhax.pw/piwik/piwik.php?"
