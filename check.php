@@ -28,7 +28,7 @@
 		"1" => ["version", $version],
 		"2" => ["ssid", $ssid],
 		"3" => ["success", $connected ? True : False]
-	]
+	];
 
 	file_get_contents("https://thedrhax.pw/piwik/piwik.php?"
 			. "idsite=6&"
@@ -36,6 +36,7 @@
 			. "cip=" . $_SERVER['REMOTE_ADDR'] . "&"
 			. "url=http%3a%2f%2fwi-fi.metro-it.com%3acheck.php&"
 			. "url=" . urlencode("http://wi-fi.metro-it.com/check.php") . "&"
-			. "_cvar=" . json_encode($data))
+			. "_cvar=" . json_encode($data)
+	);
 ?>
 
