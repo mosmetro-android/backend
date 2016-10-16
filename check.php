@@ -38,7 +38,6 @@
 	file_get_contents("https://thedrhax.pw/piwik/piwik.php?"
 			. "idsite=6&"
 			. "rec=1&"
-			. "_id=" . str_replace(".", "", substr(uniqid("", True), 0, 17)) . "&"
 			. "token_auth=a2176dc663545fb23a95b6aa9d7e6765&"
 			. "cip=" . $_SERVER['REMOTE_ADDR'] . "&"
 			. "url=" . urlencode("https://thedrhax.pw/mosmetro/check.php") . "&"
