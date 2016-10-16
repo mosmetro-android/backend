@@ -33,7 +33,7 @@
 			. "idsite=6&"
 			. "rec=1&"
 			. "url=" . urlencode("https://thedrhax.pw/mosmetro/check.php") . "&"
-			. "uid=" . bin2hex(openssl_random_pseudo_bytes(8)) . "&"
+			. "new_visit=1&"
 			. "_cvar=" . json_encode($data)
 	);
 ?>
