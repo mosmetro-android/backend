@@ -17,7 +17,7 @@
 		$ssid = "MosMetro_Free";
 	}
 
-	if (!empty($_POST['version']) {
+	if (!empty($_POST['version'])) {
 		$version = $_POST['version'];
 	} else {
 		exit();
