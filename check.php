@@ -35,7 +35,7 @@
 		"3" => ["success", $connected ? "true" : "false"]
 	];
 
-	header("Location: https://thedrhax.pw/piwik/piwik.php?"
+	header("Location: /piwik/piwik.php?"
 			. "idsite=6&"
 			. "rec=1&"
 			//. "token_auth=a2176dc663545fb23a95b6aa9d7e6765&"
