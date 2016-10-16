@@ -25,9 +25,9 @@
 
 	$connected = $_POST['connected'];
 
-	$query = "INSERT INTO mosmetro_stat(version, automatic, connected, ssid)" .
-		" VALUES ('" . $version . "', " . $automatic . ", " . $connected . ", '" . $ssid . "')";
-	mysqli_query($mysqli, $query);
+//	$query = "INSERT INTO mosmetro_stat(version, automatic, connected, ssid)" .
+//		" VALUES ('" . $version . "', " . $automatic . ", " . $connected . ", '" . $ssid . "')";
+//	mysqli_query($mysqli, $query);
 
 	$data = [
 		"1" => ["version", $version],
