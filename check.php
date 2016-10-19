@@ -25,7 +25,7 @@
 			. "rec=1&"
 			. "url=" . urlencode("https://thedrhax.pw/mosmetro/check.php") . "&"
 			. "new_visit=1&"
-			. "_cvar=" . json_encode($data)
+			. "_cvar=" . urlencode(json_encode($data))
 	);
 ?>
 
