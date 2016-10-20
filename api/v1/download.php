@@ -12,7 +12,7 @@
         exit();
     }
 
-    if (empty($_GET['branch'])
+    if (empty($_GET['branch']))
         fail();
 
     $branch = $_GET['branch'];
