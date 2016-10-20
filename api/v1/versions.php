@@ -12,5 +12,5 @@
                 . "api/v1/download.php?branch=" . $branch;
     }
 
-    json_encode($branches);
+    echo json_encode($branches);
 ?>
