@@ -26,14 +26,14 @@
         $json = cached_retriever("https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/" . $name . "/lastSuccessfulBuild/api/json", 30*60);
         $jenkins = json_decode($json, true);
     
-        $branches[$name]['version'] = 0;
-        $branches[$name]['build'] = $jenkins['actions'][1]['buildsByBranchName']['origin/' . $name]['buildNumber'];
-        $branches[$name]['by_build'] = 1;
+        $branches[$name]['version'] = "" . 0;
+        $branches[$name]['build'] = "" . $jenkins['actions'][1]['buildsByBranchName']['origin/' . $name]['buildNumber'];
+        $branches[$name]['by_build'] = "" . 1;
         $branches[$name]['url'] = "https://local.thedrhax.pw/jenkins/job/MosMetro-Android/branch/" . $name . "/lastSuccessfulBuild/artifact/"
            . $jenkins['artifacts'][0]['relativePath'];
         $branches[$name]['message'] = "Сборка #" . $branches[$name]['build'] . " (" . date("d.m.y H:m:s", $jenkins['timestamp'] / 1000)
             . ") ветки " . $name . ". Об изменениях вы можете узнать из репозитория GitHub (ссылка в настройках приложения).";
-        $branches[$name]['downloads'] = 0;
+        $branches[$name]['downloads'] = "" . 0;
     }
 
     add_branch_from_jenkins($branches, "master");
