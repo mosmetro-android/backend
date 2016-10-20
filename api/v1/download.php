@@ -19,8 +19,8 @@
         $apk = cached_retriever($url, 0);
         
         header("Content-Type: application/octet-stream");
-        header("Content-Disposition: attachment; "
-                . "filename=\"MosMetro-" . $branch . "-signed.apk\"");
+        header("Content-Disposition: attachment; filename="
+                    . "\"MosMetro-" . $branch . "-signed.apk\"");
         header("Content-Length: " . strlen($apk));
         
         echo $apk;
