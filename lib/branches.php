@@ -38,7 +38,6 @@
 
     add_branch_from_jenkins($branches, "master");
     add_branch_from_jenkins($branches, "experimental");
-    add_branch_from_jenkins($branches, "mosgortrans");
 
     // ------------------------------------------------------------------
 
