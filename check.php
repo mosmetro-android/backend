@@ -17,8 +17,7 @@
 	$data = [
 		"1" => ["version", $version],
 		"2" => ["ssid", $ssid],
-		"3" => ["success", $connected ? "true" : "false"],
-		"4" => ["domain", $_SERVER['HTTP_HOST']]
+		"3" => ["success", $connected ? "true" : "false"]
 	];
 
 	header("Location: /piwik/piwik.php?"
