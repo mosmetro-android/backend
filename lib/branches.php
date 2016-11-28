@@ -54,7 +54,8 @@
     $result = mysqli_query($mysqli, $query);
     
     while ($row = mysqli_fetch_array($result)) {
-        $branches[$row['branch']]['downloads']++;
+        if (!empty($branches[$row['branch']]))
+            $branches[$row['branch']]['downloads']++;
     }
     
     // ------------------------------------------------------------------
