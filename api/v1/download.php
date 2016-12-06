@@ -5,10 +5,7 @@
     include $ROOT . '/lib/branches.php';
 
     function fail() {
-        $result = array();
-        $result['success'] = False;
-        $result['status'] = 'branch not found';
-        echo json_encode($result);
+        header("HTTP/1.0 404 Not Found");
         exit();
     }
 
