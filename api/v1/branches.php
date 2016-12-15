@@ -8,7 +8,7 @@
     $result = array();
 
     foreach (array_keys($branches) as $branch) {
-        $branches[$branch]['message'] = nl2br($branches[$branch]['message']);
+        $branches[$branch]['message'] = $branches[$branch]['message'];
         $branches[$branch]['url'] = $DOMAIN . "/api/v1/download.php?branch=" . $branch;
     }
 
