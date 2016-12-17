@@ -18,6 +18,10 @@
     if (empty($url))
         fail();
 
+    $query = "INSERT INTO mosmetro_update_stat(branch)" .
+             " VALUES ('" . $branch . "')";
+    mysqli_query($mysqli, $query);
+
     $apk = cached_retriever($url, 0);
 
     header("Content-Type: application/octet-stream");
