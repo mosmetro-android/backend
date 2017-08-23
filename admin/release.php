@@ -20,9 +20,9 @@
             	$by_build = 0;
             }
             
-            $path = "/var/www/mosmetro/releases";
+            $path = "/var/www/html/releases";
             $filename = "MosMetro-" . $branch . "-v" . $version . "-b" . $build . ".apk";
-            $url = "http://thedrhax.pw/mosmetro/releases/" . $filename;
+            $url = "http://mosmetro.duckdns.org/releases/" . $filename;
             
             if (move_uploaded_file($_FILES['apk']['tmp_name'], $path . "/" . $filename)) {
                 $query = "INSERT INTO mosmetro_release(branch, version, build, by_build, url, message) VALUES ('" . $branch . "', " . $version . ", " . $build . ", " . $by_build . ", '" . $url . "', '" . $message . "')";

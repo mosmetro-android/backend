@@ -13,24 +13,25 @@
 </div>
 
 <div class="element" id="plot">
-    
     <table border="1px" width="100%">
         <tr>
             <td>branch</td>
             <td>version</td>
             <td>build</td>
+            <td>message</td>
             <td>downloads</td>
         </tr>
-    
+
         <?php
             include __DIR__ . '/../../config.php';
             include __DIR__ . '/../../lib/branches.php';
-        
+
             foreach (array_keys($branches) as $branch) {
                 echo "<tr><td><a href=\"" . $branches[$branch]['url'] . 
                     "\">" . $branch . "</a></td>" .
                     "<td>" . $branches[$branch]['version'] . "</td>" .
                     "<td>" . $branches[$branch]['build'] . "</td>" .
+                    "<td>" . nl2br($branches[$branch]['message']) . "</td>" .
                     "<td>" . $branches[$branch]['downloads'] . "</td></tr>";
             }
         ?>
