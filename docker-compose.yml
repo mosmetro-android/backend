@@ -1,27 +1,25 @@
 version: '2'
-
 services:
   memcached:
     image: memcached:alpine
-    restart: always
-
-  app:
-    image: danieldent/php-7-fpm
-    links:
-      - memcached
-    volumes:
-      - ./html/:/var/www/html/
-    command: sh -c "mkdir releases; chown www-data:www-data releases; php-fpm"
-    restart: always
-
-  nginx:
+    stdin_open: true
+    tty: true
+  mosmetro:
     image: thedrhax/nginx-stateless:v0.1
-    ports:
-      - 8080:80
-    volumes_from:
-      - app
     environment:
       CONFIG_LOCATION_0: location /releases { autoindex on; }
       FPM: 'true'
-      FPM_HOST: app
-    restart: always
+      FPM_HOST: backend
+    stdin_open: true
+    volumes:
+    - mosmetro-www:/var/www/html
+    - mosmetro-releases:/var/www/html/releases
+    tty: true
+    labels:
+      io.rancher.sidekicks: backend
+  backend:
+    image: thedrhax/mosmetro-backend
+    stdin_open: true
+    tty: true
+    volumes_from:
+    - mosmetro
