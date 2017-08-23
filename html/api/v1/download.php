@@ -1,53 +1,81 @@
 <?php
-    $ROOT = __DIR__ . '/../..';
+    define(__ROOT__, __DIR__ . "/../..");
 
-    include $ROOT . '/config.php';
-    include $ROOT . '/lib/branches.php';
+    require_once __ROOT__ . '/lib/branches.php';
 
     function fail() {
         header("HTTP/1.0 404 Not Found");
         exit();
     }
 
-    function github_get_link_to_release($repo, $project) {
-        $cache = new CacheConnection;
-        $github_api_url = "https://api.github.com/repos/" . $repo . "/" . $project . "/releases/latest";
-        $github_api_json = $cache->cached_retriever($github_api_url, 30*60);
-        $github_api = json_decode($github_api_json, true);
-        return $github_api['assets'][0]['browser_download_url'];
+    $cache = new CacheConnection;
+
+    // ------------------------------------------------------------------
+    // Module download helper
+    // Grabs links to modules from GitHub API
+    // ------------------------------------------------------------------
+
+    $modules = array( // name => GitHub repo
+        "captcha_recognition" => "mosmetro-android/module-captcha-recognition",
+    );
+
+    if (!empty($_GET['module'])) {
+        if (isset($_GET['module'], $modules)) {
+            $name = $modules[$_GET['module']];
+
+            if (!$cache->exists($name)) {
+                $releases = get_branches_from_github($name);
+                $cache->set($name, $releases['play']['url'], 2*60*60);
+            }
+
+            header('Location: ' . $cache->get($name));
+            exit();
+        } else {
+            fail();
+        }
     }
 
-    if (!empty($_GET['module']) && $_GET['module'] == "captcha_recognition") {
-        header('Location: ' . github_get_link_to_release("mosmetro-android", "module-captcha-recognition"));
-        exit();
-    }
+    // ------------------------------------------------------------------
 
-    if (empty($_GET['branch']))
+    if (empty($_GET['branch'])) {
         fail();
+    }
 
     $branch = $_GET['branch'];
-    $url = $branches[$branch]['url'];
-    if ($branches[$branch]['by_build'] == "1") {
-        $version = $branches[$branch]['build'];
-    } else {
-        $version = $branches[$branch]['version'];
+
+    if (empty($branches[$branch]['filename'])) {
+        fail();
     }
 
-    if (empty($url))
-        fail();
+    function download($branches) {
+        // Create /releases
+        if (!file_exists(__ROOT__ . '/releases')) {
+            mkdir(__ROOT__ . '/releases', 0777, true);
+        }
 
-    $query = "INSERT INTO mosmetro_update_stat(branch, version)" .
-             " VALUES ('" . $branch . "', '" . $version . "')";
-    mysqli_query($mysqli, $query);
+        // Remove all previous releases
+        array_map('unlink', glob(__ROOT__ . "/releases/*") ?: []);
 
-    $cache = new CacheConnection;
-    $apk = $cache->cached_retriever($url, 0);
+        // Download new releases
+        foreach (array_keys($branches) as $branch) {
+            file_put_contents(
+                __ROOT__ . "/releases/" . $branches[$branch]['filename'],
+                file_get_contents($branches[$branch]['url'])
+            );
+        }
+    }
 
-    header("Content-Type: application/octet-stream");
-    header("Content-Disposition: attachment; filename="
-                . "\"MosMetro-" . $branch . "-signed.apk\"");
-    header("Content-Length: " . strlen($apk));
+    // Use locks to avoid downloading corrupted file
+    $flush_lock = fopen("/tmp/flush.lock", "w+");
+    if (!file_exists(__ROOT__ . "/releases/" . $branches[$branch]['filename'])) {
+        if (flock($flush_lock, LOCK_EX)) {
+            download($branches);
+            flock($flush_lock, LOCK_UN);
+        }
+    }
+    flock($flush_lock, LOCK_SH);
+    flock($flush_lock, LOCK_UN);
+    fclose($flush_lock);
 
-    echo $apk;
-    exit();
+    header("Location: /releases/" . $branches[$branch]['filename']);
 ?>

@@ -15,23 +15,35 @@ class CacheConnection {
         $this->$_con->flush();
     }
 
+    function get($name) {
+        return $this->$_con->get($name);
+    }
+
+    function exists($name) {
+        return $this->get($name) !== false;
+    }
+
+    function set($name, $value, $ttl) {
+        $this->$_con->set($name, $value, $ttl);
+    }
+
     function failsafe_retriever($url) {
         ini_set('user_agent','Mozilla/4.0 (compatible; MSIE 6.0)'); 
         $content = file_get_contents($url);
 
         if (!($content === FALSE)) {
-            $this->$_con->set("failsafe-" . $url, $content, 0);
+            $this->set("failsafe-" . $url, $content, 0);
         }
 
-        return $this->$_con->get("failsafe-" . $url);
+        return $this->get("failsafe-" . $url);
     }
 
     function cached_retriever($url, $ttl) {
-        if (!($this->$_con->get($url) !== false)) {
-            $this->$_con->set($url, $this->failsafe_retriever($url) , $ttl);
+        if (!$this->exists($url)) {
+            $this->set($url, $this->failsafe_retriever($url) , $ttl);
         }
 
-        return $this->$_con->get($url);
+        return $this->get($url);
     }
 
 }

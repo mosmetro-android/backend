@@ -1,4 +1,11 @@
 <?php
+    define(__ROOT__, __DIR__ . "/../..");
+
+    if (file_exists(__ROOT__ . "/config.php")) {
+        require_once __ROOT__ . "/config.php";
+    } else {
+        require_once __ROOT__ . "/config.example.php";
+    }
 
     $data = [
         "1" => ["version", $_POST["version"]],
@@ -18,26 +25,17 @@
         $data["6"] = ["captcha", $_POST["captcha"]];
     }
 
-/*    if (!empty($_POST["captcha_image"])) {
-        $path = "/tmp/mosmetro-captcha";
-        $date = date("H:i:s-d.m.y");
+    if (!empty($_POST["captcha_image"])) {
+        $path = $pref_captcha['save_dir'];
+        $date = date($pref_captcha['date_format']);
+
         mkdir($path, 755, true);
+
         file_put_contents(
             $path . '/' . $_POST["captcha_code"] . '-' . $date . '.png',
             base64_decode($_POST["captcha_image"])
         );
-    } */
-
-/*
-    header("Location: "
-        . "/piwik/piwik.php?"
-        . "idsite=6&"
-        . "rec=1&"
-        . "url=" . urlencode("https://thedrhax.pw/mosmetro/check.php") . "&"
-        . "new_visit=1&"
-        . "_cvar=" . urlencode(json_encode($data))
-    );
-*/
+    }
 
 ?>
 

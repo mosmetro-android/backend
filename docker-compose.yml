@@ -3,32 +3,25 @@ version: '2'
 services:
   memcached:
     image: memcached:alpine
-    command: memcached -m 1024 -I 100m
     restart: always
 
   app:
-    build: .
-    image: thedrhax/mosmetro-backend
+    image: danieldent/php-7-fpm
     links:
       - memcached
     volumes:
-      - mosmetro-www:/var/www/html
+      - ./html/:/var/www/html/
+    command: sh -c "mkdir releases; chown www-data:www-data releases; php-fpm"
     restart: always
 
   nginx:
     image: thedrhax/nginx-stateless:v0.1
     ports:
       - 8080:80
-    links:
-      - app
     volumes_from:
       - app
     environment:
       CONFIG_LOCATION_0: location /releases { autoindex on; }
-#      CONFIG_LOCATION_1: location /admin { auth_basic "closed website"; auth_basic_user_file /run/secrets/mosmetro-htpasswd; }
       FPM: 'true'
       FPM_HOST: app
     restart: always
-
-volumes:
-  mosmetro-www:

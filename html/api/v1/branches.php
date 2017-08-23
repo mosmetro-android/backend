@@ -1,14 +1,10 @@
 <?php
-    $ROOT = __DIR__ . '/../..';
-    $DOMAIN = "http://" . $_SERVER['HTTP_HOST'];
+    define(__ROOT__, __DIR__ . "/../..");
+    $DOMAIN = "https://" . $_SERVER['HTTP_HOST'];
 
-    include $ROOT . '/config.php';
-    include $ROOT . '/lib/branches.php';
-
-    $result = array();
+    require_once __ROOT__ . '/lib/branches.php';
 
     foreach (array_keys($branches) as $branch) {
-        $branches[$branch]['message'] = $branches[$branch]['message'];
         $branches[$branch]['url'] = $DOMAIN . "/api/v1/download.php?branch=" . $branch;
     }
 

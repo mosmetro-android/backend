@@ -1,4 +1,2 @@
-admin/.htaccess
-admin/.htpasswd
-config.php
-releases
+html/config.php
+html/releases
