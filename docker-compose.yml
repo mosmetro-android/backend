@@ -4,6 +4,8 @@ services:
     image: memcached:alpine
     stdin_open: true
     tty: true
+    labels:
+      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
   mosmetro:
     image: thedrhax/nginx-stateless:v0.1
     environment:
@@ -16,6 +18,7 @@ services:
     - mosmetro-releases:/var/www/html/releases
     tty: true
     labels:
+      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
       io.rancher.sidekicks: backend
   backend:
     image: thedrhax/mosmetro-backend
