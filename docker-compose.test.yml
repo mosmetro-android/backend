@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  memcached:
+    image: memcached:alpine
+    restart: always
+
+  app:
+    build: .
+    image: thedrhax/mosmetro-backend
+    links:
+      - memcached
+    volumes:
+      - ./html/:/var/www/html/
+    restart: always
+
+  nginx:
+    image: thedrhax/nginx-stateless:v0.1
+    ports:
+      - 8080:80
+    volumes_from:
+      - app
+    environment:
+      CONFIG_LOCATION_0: location /releases { autoindex on; }
+      FPM: 'true'
+      FPM_HOST: app
+    restart: always
