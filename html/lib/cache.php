@@ -3,12 +3,12 @@
 class CacheConnection {
 
     function __construct() {
-        $this->$_con = new Memcache;
+        $this->$_con = new Memcached;
         $this->$_con->addServer('memcached', 11211);
     }
 
     function __destruct() {
-        $this->$_con->close();
+        $this->$_con->quit();
     }
 
     function flush() {
