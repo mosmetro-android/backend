@@ -17,6 +17,9 @@ services:
     - mosmetro-www:/var/www/html
     - mosmetro-releases:/var/www/html/releases
     tty: true
+    links:
+    - memcached:memcached
+    - influxdb:influxdb
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
       io.rancher.sidekicks: backend
@@ -24,6 +27,9 @@ services:
     image: thedrhax/mosmetro-backend
     stdin_open: true
     tty: true
+    links:
+    - memcached:memcached
+    - influxdb:influxdb
     volumes_from:
     - mosmetro
   influxdb:
