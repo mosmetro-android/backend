@@ -43,23 +43,6 @@
     if ($pref_stat["enabled"]) {
         require_once __ROOT__ . '/vendor/autoload.php';
 
-        $client = new InfluxDB\Client(
-            $pref_stat["influx_host"],
-            $pref_stat["influx_port"]
-        );
-
-        $database = $client->selectDB(
-            $pref_stat["influx_port"]
-        );
-
-        if (!$database->exists()) {
-	        $database->create(
-                new InfluxDB\Database\RetentionPolicy(
-                    'test', $pref_stat["influx_retention"], 2, true
-                )
-            );
-        }
-
         $points = [
 	        new InfluxDB\Point(
 		        'hit', // name
@@ -69,6 +52,18 @@
 		        date('U')
 	        ),
         ];
+
+        $database = \InfluxDB\Client::fromDSN(
+            $pref_stat["influxdb_dsn"]
+        );
+
+        if (!$database->exists()) {
+            $database->create(
+                new InfluxDB\Database\RetentionPolicy(
+                    'test', $pref_stat["influxdb_retention"], 2, true
+                )
+            );
+        }
 
         $database->writePoints($points, InfluxDB\Database::PRECISION_SECONDS);
     }
