@@ -54,6 +54,10 @@
         $timestamp = date('U');
         $points = [
             new InfluxDB\Point(
+                'hit',
+                1, $data, [], $timestamp
+            ),
+            new InfluxDB\Point(
                 'hit.version.code.' . null_to_str($data["version.code"]),
                 1, $data, [], $timestamp
             ),
