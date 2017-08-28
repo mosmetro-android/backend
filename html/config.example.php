@@ -19,7 +19,7 @@
     /* Statistics */
     $pref_stat = array(
         "enabled" => "true",
-        "influxdb_dsn" => "influxdb://influxdb:8086/mosmetro";
+        "influxdb_dsn" => "influxdb://influxdb:8086/mosmetro",
         "influxdb_retention" => "1d",
     );
 
