@@ -25,7 +25,7 @@
         $data["captcha"] = $_POST["captcha"];
     }
 
-    if (!empty($_POST["captcha_image"])) {
+    if (!empty($_POST["captcha_image"]) && $pref_captcha["save"]) {
         $path = $pref_captcha['save_dir'];
         $date = date($pref_captcha['date_format']);
 
