@@ -7,7 +7,8 @@
     }
 
     $data = [
-        "version" => $_POST["version"],
+        "version.code" => preg_filter("/^(.*)-/", "", $_POST["version"]),
+        "version.name" => preg_filter("/-(\d+)$/", "", $_POST["version"]),
         "ssid" => $_POST["ssid"],
         "success" => $_POST["success"],
         "domain" => $_SERVER["HTTP_HOST"],
@@ -43,14 +44,43 @@
     if ($pref_stat["enabled"]) {
         require_once __ROOT__ . '/vendor/autoload.php';
 
+        function null_to_str($input) {
+            if (empty($input))
+                return "null";
+            else
+                return $input;
+        }
+
+        $timestamp = date('U');
         $points = [
-	        new InfluxDB\Point(
-		        'hit', // name
-                1, // value
-		        $data, // tags
-                [], // metrics
-		        date('U')
-	        ),
+            new InfluxDB\Point(
+                'hit.version.code.' . null_to_str($data["version.code"]),
+                1, $data, [], $timestamp
+            ),
+            new InfluxDB\Point(
+                'hit.version.name.' . null_to_str($data["version.name"]),
+                1, $data, [], $timestamp
+            ),
+            new InfluxDB\Point(
+                'hit.success.' . null_to_str($data["success"]),
+                1, $data, [], $timestamp
+            ),
+            new InfluxDB\Point(
+                'hit.ssid.' . null_to_str($data["ssid"]),
+                1, $data, [], $timestamp
+            ),
+            new InfluxDB\Point(
+                'hit.provider.' . null_to_str($data["provider"]),
+                1, $data, [], $timestamp
+            ),
+            new InfluxDB\Point(
+                'hit.domain.' . null_to_str($data["domain"]),
+                1, $data, [], $timestamp
+            ),
+            new InfluxDB\Point(
+                'hit.captcha.' . null_to_str($data["captcha"]),
+                1, $data, [], $timestamp
+            ),
         ];
 
         $database = \InfluxDB\Client::fromDSN(
