@@ -5,6 +5,15 @@ services:
     image: memcached:alpine
     restart: always
 
+  influxdb:
+    image: influxdb
+    ports:
+    - 8086:8086
+    stdin_open: true
+    volumes:
+    - mosmetro-influxdb:/var/lib/influxdb
+    restart: always
+
   app:
     build: .
     image: thedrhax/mosmetro-backend
@@ -30,3 +39,4 @@ services:
 volumes:
   mosmetro-www:
   mosmetro-releases:
+  mosmetro-influxdb:

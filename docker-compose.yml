@@ -26,3 +26,12 @@ services:
     tty: true
     volumes_from:
     - mosmetro
+  influxdb:
+    image: influxdb
+    stdin_open: true
+    volumes:
+    - mosmetro-influxdb:/var/lib/influxdb
+    tty: true
+    labels:
+      io.rancher.scheduler.affinity:host_label: mosmetro=backend
+

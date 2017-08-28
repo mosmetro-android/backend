@@ -16,5 +16,14 @@
         "flush_password" => "",
     );
 
+    /* Statistics */
+    $pref_stat = array(
+        "enabled" => "true",
+        "influx_host" => "influxdb",
+        "influx_port" => "8086",
+        "influx_db" => "mosmetro",
+        "influx_retention" => "1d",
+    );
+
 ?>
 

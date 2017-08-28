@@ -8,21 +8,21 @@
     }
 
     $data = [
-        "1" => ["version", $_POST["version"]],
-        "2" => ["ssid", $_POST["ssid"]],
-        "3" => ["success", $_POST["success"]],
-        "4" => ["domain", $_SERVER["HTTP_HOST"]],
+        "version" => $_POST["version"],
+        "ssid" => $_POST["ssid"],
+        "success" => $_POST["success"],
+        "domain" => $_SERVER["HTTP_HOST"],
     ];
 
     if (!empty($_POST["provider"])) {
-        $data["5"] = ["provider", $_POST["provider"]];
+        $data["provider"] = $_POST["provider"];
     }
     if (!empty($_POST["p"])) {
-        $data["5"] = ["provider", $_POST["p"]];
+        $data["provider"] = $_POST["p"];
     }
 
     if (!empty($_POST["captcha"])) {
-        $data["6"] = ["captcha", $_POST["captcha"]];
+        $data["captcha"] = $_POST["captcha"];
     }
 
     if (!empty($_POST["captcha_image"])) {
@@ -37,5 +37,41 @@
         );
     }
 
+    // ------------------------------------------------------------------
+    // Write statistics to InfluxDB
+    // ------------------------------------------------------------------
+
+    if ($pref_stat["enabled"]) {
+        require_once __ROOT__ . '/vendor/autoload.php';
+
+        $client = new InfluxDB\Client(
+            $pref_stat["influx_host"],
+            $pref_stat["influx_port"]
+        );
+
+        $database = $client->selectDB(
+            $pref_stat["influx_port"]
+        );
+
+        if (!$database->exists()) {
+	        $database->create(
+                new InfluxDB\Database\RetentionPolicy(
+                    'test', $pref_stat["influx_retention"], 2, true
+                )
+            );
+        }
+
+        $points = [
+	        new InfluxDB\Point(
+		        'hit', // name
+                1, // value
+		        $data, // tags
+                [], // metrics
+		        date('U')
+	        ),
+        ];
+
+        $database->writePoints($points, InfluxDB\Database::PRECISION_SECONDS);
+    }
 ?>
 
