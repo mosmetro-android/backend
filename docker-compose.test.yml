@@ -11,7 +11,8 @@ services:
     links:
       - memcached
     volumes:
-      - ./html/:/var/www/html/
+    - mosmetro-www:/var/www/html
+    - mosmetro-releases:/var/www/html/releases
     restart: always
 
   nginx:
@@ -25,3 +26,7 @@ services:
       FPM: 'true'
       FPM_HOST: app
     restart: always
+
+volumes:
+  mosmetro-www:
+  mosmetro-releases:
