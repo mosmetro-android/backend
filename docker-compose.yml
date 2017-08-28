@@ -33,7 +33,7 @@ services:
     volumes_from:
     - mosmetro
   influxdb:
-    image: influxdb
+    image: influxdb:alpine
     stdin_open: true
     volumes:
     - mosmetro-influxdb:/var/lib/influxdb

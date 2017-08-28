@@ -6,7 +6,7 @@ services:
     restart: always
 
   influxdb:
-    image: influxdb
+    image: influxdb:alpine
     ports:
     - 8086:8086
     stdin_open: true
