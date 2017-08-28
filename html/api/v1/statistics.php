@@ -1,10 +1,9 @@
 <?php
     define(__ROOT__, __DIR__ . "/../..");
 
+    require_once __ROOT__ . "/config.example.php";
     if (file_exists(__ROOT__ . "/config.php")) {
         require_once __ROOT__ . "/config.php";
-    } else {
-        require_once __ROOT__ . "/config.example.php";
     }
 
     $data = [
