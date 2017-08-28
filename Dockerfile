@@ -20,11 +20,17 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
  && php composer-setup.php --install-dir /usr/bin --filename composer \
  && php -r "unlink('composer-setup.php');"
 
+# Copy source files and scripts
 COPY html /usr/share/mosmetro
 COPY entrypoint.sh /
 
+# Fix permissions
+RUN chown -R www-data:www-data /usr/share/mosmetro
+
 # Install dependencies
+USER www-data
 RUN cd /usr/share/mosmetro \
  && php /usr/bin/composer require influxdb/influxdb-php
+USER root
 
 ENTRYPOINT /entrypoint.sh
