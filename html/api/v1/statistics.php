@@ -42,64 +42,18 @@
     // ------------------------------------------------------------------
 
     if ($pref_stat["enabled"]) {
-        require_once __ROOT__ . '/vendor/autoload.php';
+        require_once __ROOT__ . '/lib/influxdb.php';
 
-        function null_to_str($input) {
-            if (empty($input))
-                return "null";
-            else
-                return $input;
-        }
-
-        $timestamp = date('U');
-        $points = [
-            new InfluxDB\Point(
-                'hit',
-                1, $data, [], $timestamp
-            ),
-            new InfluxDB\Point(
-                'hit.version.code.' . null_to_str($data["version.code"]),
-                1, $data, [], $timestamp
-            ),
-            new InfluxDB\Point(
-                'hit.version.name.' . null_to_str($data["version.name"]),
-                1, $data, [], $timestamp
-            ),
-            new InfluxDB\Point(
-                'hit.success.' . null_to_str($data["success"]),
-                1, $data, [], $timestamp
-            ),
-            new InfluxDB\Point(
-                'hit.ssid.' . null_to_str($data["ssid"]),
-                1, $data, [], $timestamp
-            ),
-            new InfluxDB\Point(
-                'hit.provider.' . null_to_str($data["provider"]),
-                1, $data, [], $timestamp
-            ),
-            new InfluxDB\Point(
-                'hit.domain.' . null_to_str($data["domain"]),
-                1, $data, [], $timestamp
-            ),
-            new InfluxDB\Point(
-                'hit.captcha.' . null_to_str($data["captcha"]),
-                1, $data, [], $timestamp
-            ),
-        ];
-
-        $database = \InfluxDB\Client::fromDSN(
-            $pref_stat["influxdb_dsn"]
-        );
-
-        if (!$database->exists()) {
-            $database->create(
-                new InfluxDB\Database\RetentionPolicy(
-                    'test', $pref_stat["influxdb_retention"], 2, true
-                )
-            );
-        }
-
-        $database->writePoints($points, InfluxDB\Database::PRECISION_SECONDS);
+        $influx = new InfluxClient($pref_stat["influxdb_dsn"], $pref_stat["influxdb_retention"]);
+        $influx->add('', 'hit', 1, $data, []);
+        $influx->add('hit.version.code.', $data["version.code"], 1, $data, []);
+        $influx->add('hit.version.name.', $data["version.name"], 1, $data, []);
+        $influx->add('hit.success.', $data["success"], 1, $data, []);
+        $influx->add('hit.ssid.', $data["ssid"], 1, $data, []);
+        $influx->add('hit.provider.', $data["provider"], 1, $data, []);
+        $influx->add('hit.domain.', $data["domain"], 1, $data, []);
+        $influx->add('hit.captcha.', $data["captcha"], 1, $data, []);
+        $influx->write();
     }
 ?>
 
