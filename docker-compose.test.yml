@@ -36,6 +36,15 @@ services:
       FPM_HOST: app
     restart: always
 
+  chronograf:
+    image: chronograf:alpine
+    ports:
+      - 8888:8888
+    volumes:
+      - /dev/shm/chronograf:/var/lib/chronograf
+    command: chronograf --influxdb-url=http://influxdb:8086
+    restart: always
+
 volumes:
   mosmetro-www:
   mosmetro-releases:
