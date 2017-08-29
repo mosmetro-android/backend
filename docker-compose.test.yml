@@ -13,6 +13,22 @@ services:
     volumes:
     - mosmetro-influxdb:/var/lib/influxdb
     restart: always
+    environment:
+      CONFIG_EVAL: |-
+        if ! grep -q udp /etc/influxdb/influxdb.conf; then
+          echo [[udp]];
+          echo '  'enabled = true;
+          echo '  'bind-address = \":8089\";
+          echo '  'database = \"mosmetro\";
+          echo '  'batch-size = 5000;
+          echo '  'batch-timeout = \"1s\";
+          echo '  'batch-pending = 10;
+          echo '  'read-buffer = 0;
+        fi
+    entrypoint: /bin/sh
+    command:
+    - -c
+    - eval $$CONFIG_EVAL >> /etc/influxdb/influxdb.conf; /entrypoint.sh influxd
 
   app:
     build: .

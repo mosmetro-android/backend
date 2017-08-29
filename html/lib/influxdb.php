@@ -12,15 +12,6 @@ class InfluxClient {
 
     function __construct($dsn, $retention) {
         $this->database = \InfluxDB\Client::fromDSN($dsn);
-
-        if (!$this->database->exists()) {
-            $this->database->create(
-                new InfluxDB\Database\RetentionPolicy(
-                    'test', $retention, 2, true
-                )
-            );
-        }
-
         $this->reset_points();
     }
 
@@ -35,7 +26,7 @@ class InfluxClient {
         $this->points[] = new InfluxDB\Point(
             $path . $this->null_to_str($name),
             $value, $tags, $metrics,
-            date('U')
+            date('U') * 1000000000 // Fake nanosecond precision
         );
 
         return $this;
@@ -43,7 +34,7 @@ class InfluxClient {
 
     function write() {
         $this->database->writePoints(
-            $this->points, InfluxDB\Database::PRECISION_SECONDS
+            $this->points
         );
     }
 
