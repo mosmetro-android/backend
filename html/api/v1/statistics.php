@@ -37,6 +37,15 @@
         );
     }
 
+    if (!empty($_POST["bssid"])) {
+        $data["mac.oui"] = substr($_POST["bssid"], 0, 8);
+        $data["mac.nic"] = substr($_POST["bssid"], 9);
+    }
+
+    if (!empty($_POST["segment"])) {
+        $data["segment"] = $_POST["segment"];
+    }
+
     // ------------------------------------------------------------------
     // Write statistics to InfluxDB
     // ------------------------------------------------------------------
@@ -53,6 +62,8 @@
         $influx->add('hit.provider.', $data["provider"], 1, $data, []);
         $influx->add('hit.domain.', $data["domain"], 1, $data, []);
         $influx->add('hit.captcha.', $data["captcha"], 1, $data, []);
+        $influx->add('hit.segment.', $data["segment"], 1, $data, []);
+        $influx->add('hit.mac.oui.', $data["mac.oui"], 1, $data, []);
         $influx->write();
     }
 ?>
