@@ -64,3 +64,5 @@ services:
     tty: true
     links:
     - influxdb:influxdb
+    labels:
+      io.rancher.scheduler.affinity:host_label: mosmetro=backend
