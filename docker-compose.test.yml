@@ -61,7 +61,22 @@ services:
     command: chronograf --influxdb-url=http://influxdb:8086
     restart: always
 
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    environment:
+      GF_SERVER_ROOT_URL: http://127.0.0.1:3000/
+      GF_SECURITY_ADMIN_PASSWORD: test
+    volumes:
+      - grafana:/var/lib/grafana
+      - /dev/shm/grafana-logs:/var/log/grafana
+      - grafana-config:/etc/grafana
+    restart: always
+
 volumes:
   mosmetro-www:
   mosmetro-releases:
   mosmetro-influxdb:
+  grafana:
+  grafana-config:
