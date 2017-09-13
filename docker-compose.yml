@@ -39,7 +39,7 @@ services:
     - mosmetro-influxdb:/var/lib/influxdb
     tty: true
     labels:
-      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
+      io.rancher.scheduler.affinity:host_label: mosmetro=backend
     environment:
       CONFIG_EVAL: |-
         if ! grep -q udp /etc/influxdb/influxdb.conf; then
