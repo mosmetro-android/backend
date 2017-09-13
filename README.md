@@ -32,7 +32,7 @@ docker-compose -f docker-compose.test.yml up -d
 Очистить систему от контейнеров, образов и томов можно, опять же, с помощью одной следующей команды:
 
 ```
-docker-compose -f docker-compose.test.yml down --rmi all -v
+docker-compose -f test.yml down --rmi all -v
 ```
 
 ## Как оно оказывается на сервере?
