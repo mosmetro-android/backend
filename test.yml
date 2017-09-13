@@ -30,6 +30,13 @@ services:
     - -c
     - eval $$CONFIG_EVAL >> /etc/influxdb/influxdb.conf; /entrypoint.sh influxd
 
+  influxdb-proxy:
+    image: thedrhax/influxdb-timeshift-proxy
+    environment:
+      INFLUXDB: influxdb:8086
+    stdin_open: true
+    tty: true
+
   app:
     build: .
     image: thedrhax/mosmetro-backend
