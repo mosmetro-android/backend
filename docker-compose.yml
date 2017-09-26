@@ -29,7 +29,7 @@ services:
     tty: true
     links:
     - memcached:memcached
-    - influxdb:influxdb
+    - statsd:statsd
     volumes_from:
     - mosmetro
   influxdb:
