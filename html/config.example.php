@@ -19,7 +19,9 @@
     /* Statistics */
     $pref_stat = array(
         "enabled" => "true",
-        "influxdb_dsn" => "udp+influxdb://influxdb:8089/mosmetro",
+        "host" => "statsd",
+        "port" => 8125,
+        "namespace" => "mosmetro"
     );
 
 ?>

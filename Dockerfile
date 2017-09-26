@@ -28,7 +28,7 @@ RUN chown -R www-data:www-data /usr/share/mosmetro
 # Install dependencies
 USER www-data
 RUN cd /usr/share/mosmetro \
- && php /usr/bin/composer require influxdb/influxdb-php
+ && php /usr/bin/composer require league/statsd
 USER root
 
 ENTRYPOINT /entrypoint.sh

@@ -47,24 +47,30 @@
     }
 
     // ------------------------------------------------------------------
-    // Write statistics to InfluxDB
+    // Write statistics to StatsD
     // ------------------------------------------------------------------
 
-    if ($pref_stat["enabled"]) {
-        require_once __ROOT__ . '/lib/influxdb.php';
+    require_once __ROOT__ . '/vendor/autoload.php';
 
-        $influx = new InfluxClient($pref_stat["influxdb_dsn"], $pref_stat["influxdb_retention"]);
-        $influx->add('', 'hit', 1, $data, []);
-        $influx->add('hit.version.code.', $data["version.code"], 1, $data, []);
-        $influx->add('hit.version.name.', $data["version.name"], 1, $data, []);
-        $influx->add('hit.success.', $data["success"], 1, $data, []);
-        $influx->add('hit.ssid.', $data["ssid"], 1, $data, []);
-        $influx->add('hit.provider.', $data["provider"], 1, $data, []);
-        $influx->add('hit.domain.', $data["domain"], 1, $data, []);
-        $influx->add('hit.captcha.', $data["captcha"], 1, $data, []);
-        $influx->add('hit.segment.', $data["segment"], 1, $data, []);
-        $influx->add('hit.mac.oui.', $data["mac.oui"], 1, $data, []);
-        $influx->write();
+    function escape_str($input) {
+        if (empty($input))
+            return "null";
+        else
+            return str_replace(".", "_", $input);
+    }
+
+    if ($pref_stat["enabled"]) {
+        $statsd = new League\StatsD\Client();
+        $statsd->configure($pref_stat);
+        $statsd->increment('success.' . escape_str($data['success']));
+        $statsd->increment('version.code.' . escape_str($data['version.code']));
+        $statsd->increment('version.name.' . escape_str($data['version.name']));
+        $statsd->increment('ssid.' . escape_str($data['ssid']));
+        $statsd->increment('provider.' . escape_str($data['provider']));
+        $statsd->increment('domain.' . escape_str($data['domain']));
+        $statsd->increment('captcha.' . escape_str($data['captcha']));
+        $statsd->increment('segment.' . escape_str($data['segment']));
+        $statsd->increment('mac.' . escape_str($data['mac.oui']) . '.' . escape_str($data['mac.nic']));
     }
 ?>
 

@@ -19,7 +19,7 @@ services:
     tty: true
     links:
     - memcached:memcached
-    - influxdb:influxdb
+    - statsd:statsd
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
       io.rancher.sidekicks: backend
@@ -56,13 +56,29 @@ services:
     command:
     - -c
     - eval $$CONFIG_EVAL >> /etc/influxdb/influxdb.conf; /entrypoint.sh influxd
-  influxdb-proxy:
-    image: thedrhax/influxdb-timeshift-proxy
-    environment:
-      INFLUXDB: influxdb:8086
+  statsd:
+    image: dsop/alpine-statsd:latest
     stdin_open: true
     tty: true
     links:
     - influxdb:influxdb
+    labels:
+      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
+    environment:
+      CONFIG_EVAL: |-
+        sed -i 's/graphite.example.com/influxdb/g' /etc/statsd/config.js
+    entrypoint: /bin/sh
+    command:
+    - -c
+    - eval $$CONFIG_EVAL; /usr/bin/node stats.js /etc/statsd/config.js
+  influxgraph:
+    image: thedrhax/influxgraph
+    stdin_open: true
+    volumes:
+    - /dev/shm/influxgraph-index:/srv/graphite
+    tty: true
+    links:
+    - influxdb:influxdb
+    - memcached:memcached
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=backend

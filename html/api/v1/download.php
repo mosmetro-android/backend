@@ -80,25 +80,20 @@
     header("Location: /releases/" . $branches[$branch]['filename']);
 
     // ------------------------------------------------------------------
-    // Write statistics to InfluxDB
+    // Write statistics to StatsD
     // ------------------------------------------------------------------
 
+    require_once __ROOT__ . '/vendor/autoload.php';
     require_once __ROOT__ . "/config.example.php";
     if (file_exists(__ROOT__ . "/config.php")) {
         require_once __ROOT__ . "/config.php";
     }
 
     if ($pref_stat["enabled"]) {
-        require_once __ROOT__ . '/lib/influxdb.php';
-
-        $tags = array(
-            "branch" => $branch,
-            "version" => $branches[$branch][$version],
-        );
-
-        $influx = new InfluxClient($pref_stat["influxdb_dsn"], $pref_stat["influxdb_retention"]);
-        $influx->add('update.branch.', $tags["branch"], 1, $tags, []);
-        $influx->add('update.version.code.', $tags["version"], 1, $tags, []);
-        $influx->write();
+        $statsd = new League\StatsD\Client();
+        $statsd->configure($pref_stat);
+        $statsd->increment('update.' . $branch . '.' . $branches[$branch][
+            $branches[$branch]['by_build'] == "1" ? 'build' : 'version'
+        ]);
     }
 ?>
