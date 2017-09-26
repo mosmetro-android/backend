@@ -24,7 +24,7 @@
 После этого можно собрать и запустить всё окружение с помощью следующей команды:
 
 ```
-docker-compose -f docker-compose.test.yml up -d
+docker-compose -f test.yml up -d
 ```
 
 Сервер станет доступен на порту 8080.
