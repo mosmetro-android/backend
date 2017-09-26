@@ -42,15 +42,11 @@ services:
       io.rancher.scheduler.affinity:host_label: mosmetro=backend
     environment:
       CONFIG_EVAL: |-
-        if ! grep -q udp /etc/influxdb/influxdb.conf; then
-          echo [[udp]];
+        if ! grep -q graphite /etc/influxdb/influxdb.conf; then
+          echo [[graphite]];
           echo '  'enabled = true;
-          echo '  'bind-address = \":8089\";
-          echo '  'database = \"mosmetro\";
-          echo '  'batch-size = 5000;
-          echo '  'batch-timeout = \"1s\";
-          echo '  'batch-pending = 10;
-          echo '  'read-buffer = 0;
+          echo '  'bind-address = \":2003\";
+          echo '  'protocol = \"tcp\";
         fi
     entrypoint: /bin/sh
     command:
