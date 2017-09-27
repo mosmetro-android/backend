@@ -3,21 +3,33 @@ services:
   memcached:
     scale: 1
     start_on_create: true
+    upgrade_strategy:
+      start_first: true
   mosmetro:
     scale: 1
     start_on_create: true
+    upgrade_strategy:
+      start_first: true
   backend:
     scale: 1
     start_on_create: true
+    upgrade_strategy:
+      start_first: true
   influxdb:
     scale: 1
     start_on_create: true
   influxdb-proxy:
     scale: 1
     start_on_create: true
+    upgrade_strategy:
+      start_first: true
   statsd:
     scale: 1
     start_on_create: true
+    upgrade_strategy:
+      start_first: true
   influxgraph:
     scale: 1
     start_on_create: true
+    upgrade_strategy:
+      start_first: true
