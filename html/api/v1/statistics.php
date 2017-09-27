@@ -56,7 +56,7 @@
         if (empty($input))
             return "null";
         else
-            return str_replace(".", "_", $input);
+            return str_replace(array('.', ':'), "-", $input);
     }
 
     if ($pref_stat["enabled"]) {
