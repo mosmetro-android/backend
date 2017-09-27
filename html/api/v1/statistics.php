@@ -70,7 +70,6 @@
         $statsd->increment('domain.' . escape_str($data['domain']));
         $statsd->increment('captcha.' . escape_str($data['captcha']));
         $statsd->increment('segment.' . escape_str($data['segment']));
-        $statsd->increment('mac.' . escape_str($data['mac.oui']) . '.' . escape_str($data['mac.nic']));
     }
 ?>
 
