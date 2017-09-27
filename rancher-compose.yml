@@ -12,6 +12,9 @@ services:
   influxdb:
     scale: 1
     start_on_create: true
+  influxdb-proxy:
+    scale: 1
+    start_on_create: true
   statsd:
     scale: 1
     start_on_create: true

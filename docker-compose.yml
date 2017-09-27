@@ -52,6 +52,16 @@ services:
     command:
     - -c
     - eval $$CONFIG_EVAL >> /etc/influxdb/influxdb.conf; /entrypoint.sh influxd
+  influxdb-proxy:
+    image: thedrhax/influxdb-timeshift-proxy
+    environment:
+      INFLUXDB: influxdb:8086
+    stdin_open: true
+    tty: true
+    links:
+    - influxdb:influxdb
+    labels:
+      io.rancher.scheduler.affinity:host_label: mosmetro=backend
   statsd:
     image: dsop/alpine-statsd:latest
     stdin_open: true
