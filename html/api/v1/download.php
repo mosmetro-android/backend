@@ -8,6 +8,15 @@
         exit();
     }
 
+    function js_redirect($url) {
+        echo "<script>";
+        echo "window.location.replace(\"" . $url . "\")";
+        echo "</script>";
+        echo "<a href=\"" . $url . "\">";
+        echo "Нажмите сюда, если перенаправление не сработало";
+        echo "</a>";
+    }
+
     $cache = new CacheConnection;
 
     // ------------------------------------------------------------------
@@ -20,7 +29,7 @@
     );
 
     if (!empty($_GET['module'])) {
-        if (isset($_GET['module'], $modules)) {
+        if (!empty($modules[$_GET['module']])) {
             $name = $modules[$_GET['module']];
 
             if (!$cache->exists($name)) {
@@ -28,7 +37,7 @@
                 $cache->set($name, $releases['play']['url'], 2*60*60);
             }
 
-            header('Location: ' . $cache->get($name));
+            js_redirect($cache->get($name));
             exit();
         } else {
             fail();
@@ -77,7 +86,7 @@
     flock($flush_lock, LOCK_UN);
     fclose($flush_lock);
 
-    header("Location: /releases/" . $branches[$branch]['filename']);
+    js_redirect("/releases/" . $branches[$branch]['filename']);
 
     // ------------------------------------------------------------------
     // Write statistics to StatsD
