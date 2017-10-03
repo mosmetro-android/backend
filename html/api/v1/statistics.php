@@ -65,7 +65,6 @@
         $statsd->increment('success.' . escape_str($data['success']));
         $statsd->increment('version.code.' . escape_str($data['version.code']));
         $statsd->increment('version.name.' . escape_str($data['version.name']));
-        $statsd->increment('ssid.' . escape_str($data['ssid']));
         $statsd->increment('provider.' . escape_str($data['provider']));
         $statsd->increment('domain.' . escape_str($data['domain']));
         $statsd->increment('captcha.' . escape_str($data['captcha']));
