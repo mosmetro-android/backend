@@ -18,11 +18,9 @@ services:
     - mosmetro-releases:/var/www/html/releases
     tty: true
     links:
-    - memcached:memcached
-    - statsd:statsd
+    - backend:backend
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
-      io.rancher.sidekicks: backend
   backend:
     image: thedrhax/mosmetro-backend
     stdin_open: true
@@ -32,6 +30,8 @@ services:
     - statsd:statsd
     volumes_from:
     - mosmetro
+    labels:
+      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
   influxdb:
     image: influxdb:alpine
     stdin_open: true
