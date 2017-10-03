@@ -1,4 +1,5 @@
 node('docker && rancher') {
+    String cred_git = 'GitHub'
     String cred_github = 'GitHub-Token'
 
     String github_account = 'mosmetro-android'
