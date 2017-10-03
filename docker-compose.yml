@@ -28,8 +28,9 @@ services:
     links:
     - memcached:memcached
     - statsd:statsd
-    volumes_from:
-    - mosmetro
+    volumes:
+    - mosmetro-www:/var/www/html
+    - mosmetro-releases:/var/www/html/releases
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
   influxdb:
