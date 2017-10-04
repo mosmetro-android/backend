@@ -84,7 +84,7 @@
         $result['build'] = 0;
         $result['by_build'] = "" . 0;
         $result['url'] = $release["assets"][0]["browser_download_url"];
-        $result['message'] = $release["body"];
+        $result['message'] = $release["name"] . ":\r\n" . $release["body"];
         $result['filename'] = "MosMetro-" . $name . "-v" . $release["tag_name"] . ".apk";
 
         return array($name => $result);
