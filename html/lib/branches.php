@@ -27,7 +27,7 @@
                 }
             }
         }
-        
+
         $result['version'] = "" . 0;
         $result['build'] = "" . $jenkins['number'];
         $result['by_build'] = "" . 1;
@@ -127,7 +127,7 @@
         $branches = array();
 
         $branches += get_branches_from_jenkins(
-            "https://local.thedrhax.pw/jenkins/job/MosMetro-Android"
+            "https://jenkins.thedrhax.pw/job/MosMetro-Android"
         );
         $branches += get_branches_from_github(
             "mosmetro-android/mosmetro-android"
