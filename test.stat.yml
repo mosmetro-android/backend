@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+  influxdb-proxy:
+    image: thedrhax/influxdb-timeshift-proxy
+    environment:
+      INFLUXDB: influxdb:8086
+    stdin_open: true
+    tty: true
+
+  influxgraph:
+    image: thedrhax/influxgraph
+    stdin_open: true
+    volumes:
+    - /dev/shm/influxgraph-index:/srv/graphite
+    tty: true
+    links:
+    - influxdb:influxdb
+    - memcached:memcached
+
+  chronograf:
+    image: chronograf:alpine
+    ports:
+      - 8888:8888
+    volumes:
+      - /dev/shm/chronograf:/var/lib/chronograf
+    command: chronograf --influxdb-url=http://influxdb:8086
+    restart: always
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    environment:
+      GF_SERVER_ROOT_URL: http://127.0.0.1:3000/
+      GF_SECURITY_ADMIN_PASSWORD: test
+    volumes:
+      - grafana:/var/lib/grafana
+      - /dev/shm/grafana-logs:/var/log/grafana
+      - grafana-config:/etc/grafana
+    restart: always
+
+volumes:
+  grafana:
+  grafana-config:

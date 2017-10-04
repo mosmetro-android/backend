@@ -16,12 +16,12 @@
 
 ## Как собрать?
 
-Для того, чтобы запустить тестовый сервер на своём компьютере, вам понадобится:
+Для того, чтобы запустить тестовый сервер на своём компьютере, вам понадобятся:
 
 * [docker](https://www.docker.com/)
 * [docker-compose](https://docs.docker.com/compose/)
 
-После этого можно собрать и запустить всё окружение с помощью следующей команды:
+### Базовое окружение
 
 ```
 docker-compose -f test.yml up -d
@@ -29,12 +29,22 @@ docker-compose -f test.yml up -d
 
 Сервер станет доступен на порту 8080.
 
-Очистить систему от контейнеров, образов и томов можно, опять же, с помощью одной следующей команды:
+### Окружение вместе со статистикой
+
+Данный вариант дополнительно запустит Grafana, Chronograf и другие контейнеры статистики.
 
 ```
-docker-compose -f test.yml down --rmi all -v
+docker-compose -f test.yml -f test.stat.yml up -d
+```
+
+### Очистка системы
+
+```
+docker-compose -f test.yml -f test.stat.yml down --rmi all -v
 ```
 
 ## Как оно оказывается на сервере?
 
 Сразу после появления нового коммита в этом репозитории, Jenkins собирает образ thedrhax/mosmetro-backend и отправляет его на [Docker Hub](https://hub.docker.com/r/thedrhax/mosmetro-backend/). Затем скрипт запускает rancher-compose, который активирует обновление сервисов в Rancher. Готово :)
+
+Процесс сборки полностью описан в [Jenkinsfile](./Jenkinsfile).
