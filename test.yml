@@ -1,8 +1,8 @@
 version: '2'
 
 services:
-  memcached:
-    image: memcached:alpine
+  redis:
+    image: redis:4-alpine
     restart: always
 
   influxdb:
@@ -39,25 +39,16 @@ services:
     - eval $$CONFIG_EVAL; /usr/bin/node stats.js /etc/statsd/config.js
 
   app:
-    build: .
-    image: thedrhax/mosmetro-backend
-    links:
-      - memcached
-    volumes:
-    - mosmetro-www:/var/www/html
-    - mosmetro-releases:/var/www/html/releases
-    restart: always
-
-  nginx:
-    image: thedrhax/nginx-stateless:v0.1
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: thedrhax/mosmetro-backend-dev
     ports:
-      - 8080:80
-    volumes_from:
-      - app
-    environment:
-      CONFIG_LOCATION_0: location /releases { autoindex on; }
-      FPM: 'true'
-      FPM_HOST: app
+      - 80:80
+    volumes:
+      - ./app:/app
+    links:
+      - redis:redis
     restart: always
 
 volumes:
