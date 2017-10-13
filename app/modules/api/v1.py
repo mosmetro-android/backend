@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from .. import branches
+from ..branches.github import GitHub
 
 import json
 
@@ -26,12 +27,21 @@ def branches_php():
 @v1.route("/download.php")
 def download_php():
     branch = request.args.get('branch')
+    module = request.args.get('module')
     data = branches.get()
 
-    if branch is None:
-        abort(404)
+    # TODO: Move to separate file
+    modules = {
+        'captcha_recognition': ('mosmetro-android',
+                                'module-captcha-recognition')
+    }
 
-    if branch not in data.keys():
+    # TODO: Caching of module artifacts
+    if module is not None and module in modules.keys():
+        url = GitHub(modules[module][0], modules[module][1])['play']['url']
+        return render_template('redirect.html', url=url)
+
+    if branch is None or branch not in data.keys():
         abort(404)
 
     url = "/releases/" + data[branch]['filename']
