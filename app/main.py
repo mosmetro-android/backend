@@ -2,16 +2,16 @@
 # -*- coding: UTF-8 -*-
 
 from modules import api
+from flask import Flask, render_template
 
-from flask import Flask
+
 app = Flask(__name__)
-
 api.register(app)
 
 
 @app.route("/")
 def hello():
-    return '¯\_(ツ)_/¯'
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
