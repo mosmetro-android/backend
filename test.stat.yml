@@ -8,16 +8,6 @@ services:
     stdin_open: true
     tty: true
 
-  influxgraph:
-    image: thedrhax/influxgraph
-    stdin_open: true
-    volumes:
-    - /dev/shm/influxgraph-index:/srv/graphite
-    tty: true
-    links:
-    - influxdb:influxdb
-    - memcached:memcached
-
   chronograf:
     image: chronograf:alpine
     ports:

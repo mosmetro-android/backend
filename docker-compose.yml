@@ -78,14 +78,3 @@ services:
     command:
     - -c
     - eval $$CONFIG_EVAL; /usr/bin/node stats.js /etc/statsd/config.js
-  influxgraph:
-    image: thedrhax/influxgraph
-    stdin_open: true
-    volumes:
-    - /dev/shm/influxgraph-index:/srv/graphite
-    tty: true
-    links:
-    - influxdb:influxdb
-    - memcached:memcached
-    labels:
-      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
