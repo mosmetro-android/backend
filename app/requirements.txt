@@ -2,3 +2,5 @@ flask
 requests
 requests-cache
 redis
+statsd
+parse

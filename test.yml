@@ -1,10 +1,6 @@
 version: '2'
 
 services:
-  redis:
-    image: redis:4-alpine
-    restart: always
-
   influxdb:
     image: influxdb:alpine
     ports:
@@ -37,6 +33,10 @@ services:
     command:
     - -c
     - eval $$CONFIG_EVAL; /usr/bin/node stats.js /etc/statsd/config.js
+
+  redis:
+    image: redis:4-alpine
+    restart: always
 
   app:
     build:
