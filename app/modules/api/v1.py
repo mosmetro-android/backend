@@ -3,15 +3,14 @@
 
 from .. import branches
 from ..branches.github import GitHub
+from ..util.stats import increment
 
 import json
-import statsd
 
 from parse import parse
 from flask import url_for, Blueprint, render_template, request, abort
 
 v1 = Blueprint('v1', __name__)
-stat = statsd.StatsClient('statsd', 8125, prefix='mosmetro')
 
 
 @v1.route("/branches.php")
@@ -47,50 +46,30 @@ def download_php():
     if branch is None or branch not in data.keys():
         abort(404)
 
-    if data[branch]['by_build'] == "1":
-        stat.incr('update.{0}.{1}'.format(branch, data[branch]['build']))
-    else:
-        stat.inct('update.{0}.{1}'.format(branch, data[branch]['version']))
+    version = data[branch]['build' if data[branch]['by_build'] else 'version']
+    increment('update.{0}'.format(branch), version)
 
     url = "/releases/" + data[branch]['filename']
     return render_template('redirect.html', url=url)
 
 
-def escape(string):
-    if string is None:
-        return 'null'
-
-    return string.translate([(x, '-') for x in [',', '.']])
-
-
 @v1.route("/statistics.php", methods=['GET', 'POST'])
 def statistics():
-    success = request.form.get('success')
-    if success is not None:
-        stat.incr('success.' + escape(success))
+    increment('success', request.form.get('success'))
+    increment('captcha', request.form.get('captcha'))
+    increment('segment', request.form.get('segment'))
+    increment('domain', request.environ.get('HTTP_HOST'))
 
     version = request.form.get('version')
     if version is not None:
         parsed = parse('{name}-{code:d}', version)
-        stat.incr('version.name.' + escape(parsed['name']))
-        stat.incr('version.code.' + parsed['code'])
+        increment('version.name', parsed.get('name'))
+        increment('version.code', parsed.get('code'))
 
-    provider = [request.form.get(p)
-                for p in ['p', 'provider']
-                if request.form.get(p) is not None]
-    if len(provider) > 0:
-        stat.incr('provider.' + escape(provider[0]))
+    for p in ['p', 'provider']:
+        provider = request.form.get(p)
+        if provider is not None:
+            increment('provider', provider)
+            break
 
-    domain = request.environ['HTTP_HOST']
-    if domain is not None:
-        stat.incr('domain.' + escape(domain))
-
-    captcha = request.form.get('captcha')
-    if captcha is not None:
-        stat.incr('captcha.' + escape(captcha))
-
-    segment = request.form.get('segment')
-    if segment is not None:
-        stat.incr('segment.' + escape(segment))
-
-    return json.dumps(dict(status='success'))
+    return ''
