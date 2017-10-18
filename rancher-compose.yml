@@ -1,6 +1,6 @@
 version: '2'
 services:
-  memcached:
+  redis:
     scale: 1
     start_on_create: true
     upgrade_strategy:
@@ -10,7 +10,7 @@ services:
     start_on_create: true
     upgrade_strategy:
       start_first: true
-  backend:
+  app:
     scale: 1
     start_on_create: true
     upgrade_strategy:

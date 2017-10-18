@@ -1,36 +1,30 @@
 version: '2'
 services:
-  memcached:
-    image: memcached:alpine
+  redis:
+    image: redis:4-alpine
     stdin_open: true
     tty: true
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
   mosmetro:
-    image: thedrhax/nginx-stateless:v0.1
+    image: thedrhax/nginx-stateless:v0.2
     environment:
-      CONFIG_LOCATION_0: location /releases { autoindex on; }
-      FPM: 'true'
-      FPM_HOST: backend
+      UWSGI: 'true'
+      UWSGI_HOST: app
+      UWSGI_PORT: 9000
     stdin_open: true
-    volumes:
-    - mosmetro-www:/var/www/html
-    - mosmetro-releases:/var/www/html/releases
     tty: true
     links:
-    - backend:backend
+    - app:app
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
-  backend:
+  app:
     image: thedrhax/mosmetro-backend
     stdin_open: true
     tty: true
     links:
-    - memcached:memcached
+    - redis:redis
     - statsd:statsd
-    volumes:
-    - mosmetro-www:/var/www/html
-    - mosmetro-releases:/var/www/html/releases
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
   influxdb:

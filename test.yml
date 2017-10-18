@@ -52,6 +52,4 @@ services:
     restart: always
 
 volumes:
-  mosmetro-www:
-  mosmetro-releases:
   mosmetro-influxdb:

@@ -3,11 +3,9 @@ FROM python:3-alpine
 MAINTAINER Dmitry Karikh <the.dr.hax@gmail.com>
 
 ADD app /app
-
 WORKDIR /app
 
 RUN pip install -r requirements.txt
 
 EXPOSE 5000
-
 CMD ["python", "/app/main.py"]
