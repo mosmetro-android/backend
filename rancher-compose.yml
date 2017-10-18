@@ -28,8 +28,3 @@ services:
     start_on_create: true
     upgrade_strategy:
       start_first: true
-  influxgraph:
-    scale: 1
-    start_on_create: true
-    upgrade_strategy:
-      start_first: true
