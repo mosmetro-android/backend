@@ -21,26 +21,37 @@
 * [docker](https://www.docker.com/)
 * [docker-compose](https://docs.docker.com/compose/)
 
-### Базовое окружение
+### Тестирование
 
 ```
-docker-compose -f test.yml up -d
+. env.sh dev
+docker-compose up -d
 ```
 
-Сервер станет доступен на порту 8080.
+Сервер появится на порту 80 и будет отслеживать изменения в коде в реальном времени.
 
-### Окружение вместе со статистикой
+#### Окружение вместе со статистикой
 
-Данный вариант дополнительно запустит Grafana, Chronograf и другие контейнеры статистики.
+Данный вариант дополнительно запустит Grafana, Chronograf и другие контейнеры для отладки статистики.
 
 ```
-docker-compose -f test.yml -f test.stat.yml up -d
+. env.sh dev stat
+docker-compose up -d
 ```
+
+### Развёртывание
+
+```
+. env.sh prod
+docker-compose up -d
+```
+
+Сервер появится на порту 80 и отобразит содержимое последнего собранного образа.
 
 ### Очистка системы
 
 ```
-docker-compose -f test.yml -f test.stat.yml down --rmi all -v
+docker-compose down --rmi all -v
 ```
 
 ## Как оно оказывается на сервере?

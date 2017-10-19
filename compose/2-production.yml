@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  app:
+    build: ..
+    image: thedrhax/mosmetro-backend
+    links:
+    - redis:redis
+    - statsd:statsd
+    restart: always
+
+  mosmetro:
+    image: thedrhax/nginx-stateless:v0.2
+    ports:
+      - 80:80
+    environment:
+      UWSGI: 'true'
+      UWSGI_HOST: app
+      UWSGI_PORT: 9000
+    links:
+    - app:app
+    restart: always
