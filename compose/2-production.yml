@@ -5,8 +5,10 @@ services:
     build: ..
     image: thedrhax/mosmetro-backend
     links:
-    - redis:redis
-    - statsd:statsd
+      - redis:redis
+      - statsd:statsd
+    volumes:
+      - ../app:/app
     restart: always
 
   mosmetro:
