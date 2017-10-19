@@ -4,6 +4,8 @@ if [ $# -eq 0 ]; then
     echo "Usage: $0 dev|prod [stat]"
 fi
 
+export COMPOSE_PROJECT_NAME="mosmetro"
+
 case $1 in
     dev|development)
         export COMPOSE_FILE="compose/1-common.yml:compose/2-development.yml" ;;
