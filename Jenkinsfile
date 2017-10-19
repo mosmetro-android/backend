@@ -18,7 +18,7 @@ node('docker && rancher') {
     }
 
     stage('Build') {
-        sh 'docker build -f Dockerfile.prod -t ' + docker_image + ':latest .'
+        sh 'docker build -f Dockerfile -t ' + docker_image + ':latest .'
     }
 
     stage('Push') {

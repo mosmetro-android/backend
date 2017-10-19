@@ -41,14 +41,15 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.dev
-    image: thedrhax/mosmetro-backend-dev
+      dockerfile: Dockerfile
+    image: thedrhax/mosmetro-backend
     ports:
       - 80:80
     volumes:
       - ./app:/app
     links:
       - redis:redis
+    command: python /app/main.py
     restart: always
 
 volumes:
