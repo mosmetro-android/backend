@@ -26,7 +26,7 @@ node('docker && rancher') {
     }
 
     stage('Deploy') {
-        sh 'rancher-compose --project-name ' + rancher_stack + ' up -d ' + rancher_options
+        sh 'cd rancher && rancher-compose --project-name ' + rancher_stack + ' up -d ' + rancher_options
     }
 
     stage('Notify') {
