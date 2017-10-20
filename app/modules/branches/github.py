@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from ..util.requests import CachedRequests
-
 import requests
 
 
@@ -22,9 +20,8 @@ class GitHub(dict):
         base_url = "https://api.github.com/repos"
         self.api_url = "{0}/{1}/{2}/releases".format(base_url, user, repo)
 
-        with CachedRequests():
-            headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 6.0)'}
-            json = requests.get(self.api_url, headers=headers).json()
+        headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 6.0)'}
+        json = requests.get(self.api_url, headers=headers).json()
 
         # Looking for 'beta' (latest) and 'play' (latest stable)
         beta = json[0]

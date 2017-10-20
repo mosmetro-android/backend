@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-import redis
+from .. import branches
+
 import json
 
 from functools import wraps
@@ -32,6 +33,5 @@ def requires_auth(f):
 @admin.route("/flush")
 @requires_auth
 def flush():
-    conn = redis.StrictRedis(host='redis')
-    conn.flushall()
-    return json.dumps({'status': 'success'})
+    branches.replace()
+    return json.dumps(branches.get())

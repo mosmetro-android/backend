@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from ..util.requests import CachedRequests
-
 import requests
 
 
@@ -11,10 +9,9 @@ class JenkinsBranch(dict):
         self.base_url = '{0}/job/{1}'.format(project.base_url, name)
         self.api_url = '{0}/api/json'.format(self.base_url)
 
-        with CachedRequests():
-            branch = requests.get(self.api_url).json()
-            build_api_url = branch['lastSuccessfulBuild']
-            build = requests.get(build_api_url['url'] + 'api/json').json()
+        branch = requests.get(self.api_url).json()
+        build_api_url = branch['lastSuccessfulBuild']
+        build = requests.get(build_api_url['url'] + 'api/json').json()
 
         artifacts = [x['relativePath'] for x in build['artifacts']]
         artifact = [x for x in artifacts if 'signed' in x][0]
@@ -42,8 +39,7 @@ class Jenkins(dict):
         self.base_url = '{0}/job/{1}'.format(url, project)
         self.api_url = '{0}/api/json'.format(self.base_url)
 
-        with CachedRequests():
-            json = requests.get(self.api_url).json()
+        json = requests.get(self.api_url).json()
 
         branches = [branch['name']
                     for branch in json['jobs']

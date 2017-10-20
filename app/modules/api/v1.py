@@ -5,6 +5,7 @@ from .. import branches
 from ..branches.github import GitHub
 from ..util.stats import increment
 
+import redis
 import json
 
 from parse import parse
@@ -40,7 +41,14 @@ def download_php():
 
     # TODO: Caching of module artifacts
     if module is not None and module in modules.keys():
-        url = GitHub(modules[module][0], modules[module][1])['play']['url']
+        cache = redis.StrictRedis(host='redis')
+
+        if cache.exists(module):
+            url = cache.get(module)
+        else:
+            url = GitHub(modules[module][0], modules[module][1])['play']['url']
+            cache.set(module, url, ex=3*60*60)  # 3 hours TTL
+
         return render_template('redirect.html', url=url)
 
     if branch is None or branch not in data.keys():
