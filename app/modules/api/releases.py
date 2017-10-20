@@ -22,7 +22,7 @@ def download(file):
     else:
         branch = matches[0]
 
-    with CachedRequests():
+    with CachedRequests(ttl=7*24*60*60):  # Cached for 7 days
         res = requests.get(branch['url'], stream=True)
 
     return Response(stream_with_context(res.iter_content(chunk_size=2048)),

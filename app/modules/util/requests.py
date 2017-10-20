@@ -7,13 +7,12 @@ import redis
 
 
 class CachedRequests():
-    def __enter__(self):
+    def __enter__(self, ttl=30*60):
         requests_cache.install_cache(
             cache_name='mosmetro',
             backend='redis',
-            expire_after=datetime.timedelta(minutes=30),
-            connection=redis.StrictRedis(host='redis')
-        )
+            expire_after=datetime.timedelta(seconds=ttl),
+            connection=redis.StrictRedis(host='redis'))
 
     def __exit__(self, type, value, traceback):
         requests_cache.uninstall_cache()
