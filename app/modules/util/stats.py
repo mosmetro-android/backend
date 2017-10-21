@@ -16,4 +16,4 @@ def escape(input):
 
 
 def increment(path, name):
-    client.incr(path + escape(name))
+    client.incr("{0}.{1}".format(path, escape(name)))
