@@ -63,7 +63,7 @@ def download_php():
     return render_template('redirect.html', url=url)
 
 
-@v1.route("/statistics.php", methods=['GET', 'POST'])
+@v1.route("/statistics.php", methods=['POST'])
 def statistics():
     increment('success', request.form.get('success'))
     increment('captcha', request.form.get('captcha'))
@@ -73,9 +73,11 @@ def statistics():
     version = request.form.get('version')
     if version is not None:
         parsed = parse('{name}-{code:d}', version)
-        if parsed is not None:
-            increment('version.name', parsed.get('name'))
-            increment('version.code', parsed.get('code'))
+        try:
+            increment('version.name', parsed['name'])
+            increment('version.code', parsed['code'])
+        except KeyError:
+            pass
 
     for p in ['p', 'provider']:
         provider = request.form.get(p)
