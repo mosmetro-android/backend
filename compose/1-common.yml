@@ -7,7 +7,7 @@ services:
     - 8086:8086
     stdin_open: true
     volumes:
-    - mosmetro-influxdb:/var/lib/influxdb
+    - influxdb:/var/lib/influxdb
     restart: always
     environment:
       CONFIG_EVAL: |-
@@ -36,7 +36,10 @@ services:
 
   redis:
     image: redis:4-alpine
+    volumes:
+      - redis:/data
     restart: always
 
 volumes:
-  mosmetro-influxdb:
+  influxdb:
+  redis:

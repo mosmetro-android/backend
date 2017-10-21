@@ -3,6 +3,8 @@ services:
   redis:
     image: redis:4-alpine
     stdin_open: true
+    volumes:
+    - mosmetro-redis:/data
     tty: true
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
