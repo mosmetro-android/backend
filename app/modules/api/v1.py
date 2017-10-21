@@ -73,8 +73,9 @@ def statistics():
     version = request.form.get('version')
     if version is not None:
         parsed = parse('{name}-{code:d}', version)
-        increment('version.name', parsed.get('name'))
-        increment('version.code', parsed.get('code'))
+        if parsed is not None:
+            increment('version.name', parsed.get('name'))
+            increment('version.code', parsed.get('code'))
 
     for p in ['p', 'provider']:
         provider = request.form.get(p)
