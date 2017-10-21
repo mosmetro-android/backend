@@ -9,6 +9,8 @@ services:
       - statsd:statsd
     volumes:
       - ../app:/app
+    environment:
+      CONFIG_ADMIN: "true"
     restart: always
 
   mosmetro:
@@ -20,5 +22,5 @@ services:
       UWSGI_HOST: app
       UWSGI_PORT: 9000
     links:
-    - app:app
+      - app:app
     restart: always

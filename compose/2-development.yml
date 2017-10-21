@@ -10,5 +10,7 @@ services:
       - ../app:/app
     links:
       - redis:redis
+    environment:
+      CONFIG_ADMIN: "true"
     command: python /app/main.py
     restart: always

@@ -4,11 +4,13 @@
 from .jenkins import Jenkins
 from .github import GitHub
 
+from ..util.config import config
+
 import json
 import redis
 
 
-cache = redis.StrictRedis(host='redis')
+cache = redis.StrictRedis(host=config['redis'])
 
 
 def generate():

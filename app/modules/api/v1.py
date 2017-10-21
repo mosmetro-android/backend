@@ -3,6 +3,7 @@
 
 from .. import branches
 from ..branches.github import GitHub
+from ..util.config import config
 from ..util.stats import increment
 
 import redis
@@ -10,6 +11,7 @@ import json
 
 from parse import parse
 from flask import url_for, Blueprint, render_template, request, abort
+
 
 v1 = Blueprint('v1', __name__)
 
@@ -41,7 +43,7 @@ def download_php():
 
     # TODO: Caching of module artifacts
     if module is not None and module in modules.keys():
-        cache = redis.StrictRedis(host='redis')
+        cache = redis.StrictRedis(host=config['redis'])
 
         if cache.exists(module):
             url = cache.get(module)

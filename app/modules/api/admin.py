@@ -2,16 +2,22 @@
 # -*- coding: UTF-8 -*-
 
 from .. import branches
+from ..util.config import config
 
 import json
 
 from functools import wraps
 from flask import Blueprint, Response, request
+
+
 admin = Blueprint('admin', __name__)
 
 
 def check_auth(username, password):
-    return username == "admin" and password == "SoSecureMuchWow"
+    if username == config['admin_username']:
+        if password == config['admin_password']:
+            return True
+    return False
 
 
 def authenticate():
