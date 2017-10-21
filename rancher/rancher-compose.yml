@@ -18,6 +18,8 @@ services:
   influxdb:
     scale: 1
     start_on_create: true
+    upgrade_strategy:
+      start_first: true
   influxdb-proxy:
     scale: 1
     start_on_create: true
