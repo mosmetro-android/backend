@@ -9,6 +9,8 @@ from ..util.config import config
 import json
 import redis
 
+from redis_lock import Lock
+
 
 cache = redis.StrictRedis(host=config['redis'])
 
@@ -27,6 +29,8 @@ def replace():
 
 def get():
     if not cache.exists('branches'):
-        replace()
+        with Lock(cache, 'lock-branches'):
+            if not cache.exists('branches'):
+                replace()
 
     return json.loads(cache.get('branches'))
