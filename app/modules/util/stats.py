@@ -11,8 +11,13 @@ client = statsd.StatsClient(config['statsd'], 8125,
 
 
 def escape(input):
-    replace = [(x, '-') for x in [',', '.']]
-    return 'null' if input is None else str(input).translate(replace)
+    if input is None:
+        return 'null'
+
+    input = str(input)
+    input = input.replace(',', '-')
+    input = input.replace('.', '-')
+    return input
 
 
 def increment(path, name):
