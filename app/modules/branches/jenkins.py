@@ -18,7 +18,7 @@ class JenkinsBranch(dict):
 
         self['name'] = name
         self['version'] = str(0)
-        self['build'] = build['number']
+        self['build'] = str(build['number'])
         self['by_build'] = str(1)
         self['url'] = "{0[url]}/artifact/{1}".format(build, artifact)
         self['filename'] = "MosMetro-{0[name]}-b{0[build]}.apk".format(self)
