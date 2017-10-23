@@ -9,21 +9,7 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
   mosmetro:
-    image: thedrhax/nginx-stateless:v0.2
-    environment:
-      UWSGI: 'true'
-      UWSGI_HOST: app
-      UWSGI_PORT: 9000
-    stdin_open: true
-    tty: true
-    links:
-    - app:app
-    labels:
-      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
-  app:
     image: thedrhax/mosmetro-backend
-    stdin_open: true
-    tty: true
     links:
     - redis:redis
     - statsd:statsd

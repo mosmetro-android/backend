@@ -20,11 +20,6 @@ services:
       reinitializing_timeout: 60000
     upgrade_strategy:
       start_first: true
-  app:
-    scale: 1
-    start_on_create: true
-    upgrade_strategy:
-      start_first: true
   influxdb:
     scale: 1
     start_on_create: true
