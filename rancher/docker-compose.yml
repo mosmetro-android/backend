@@ -10,6 +10,13 @@ services:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
   mosmetro:
     image: thedrhax/mosmetro-backend
+    environment:
+      MOSMETRO_ADMIN:
+      MOSMETRO_ADMIN_USERNAME:
+      MOSMETRO_ADMIN_PASSWORD:
+      MOSMETRO_REDIS:
+      MOSMETRO_STATSD:
+      MOSMETRO_STATSD_PREFIX:
     links:
     - redis:redis
     - statsd:statsd

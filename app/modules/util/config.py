@@ -10,12 +10,12 @@ def from_env(name, fallback):
 
 
 config = {
-    "admin": from_env("CONFIG_ADMIN", "false"),
-    "admin_username": from_env("CONFIG_ADMIN_USERNAME", "admin"),
-    "admin_password": from_env("CONFIG_ADMIN_PASSWORD", "admin"),
+    "admin": from_env("MOSMETRO_ADMIN", "false"),
+    "admin_username": from_env("MOSMETRO_ADMIN_USERNAME", "admin"),
+    "admin_password": from_env("MOSMETRO_ADMIN_PASSWORD", "admin"),
 
-    "redis": from_env("CONFIG_REDIS", "redis"),
+    "redis": from_env("MOSMETRO_REDIS", "redis"),
 
-    "statsd": from_env("CONFIG_STATSD", "statsd"),
-    "statsd_prefix": from_env("CONFIG_STATSD_PREFIX", "mosmetro")
+    "statsd": from_env("MOSMETRO_STATSD", "statsd"),
+    "statsd_prefix": from_env("MOSMETRO_STATSD_PREFIX", "mosmetro")
 }
