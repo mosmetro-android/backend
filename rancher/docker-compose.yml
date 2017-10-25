@@ -22,7 +22,7 @@ services:
     - mosmetro-influxdb:/var/lib/influxdb
     tty: true
     labels:
-      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
+      io.rancher.scheduler.affinity:host_label: mosmetro=statistics
     environment:
       CONFIG_EVAL: |-
         if ! grep -q graphite /etc/influxdb/influxdb.conf; then
@@ -44,7 +44,7 @@ services:
     links:
     - influxdb:influxdb
     labels:
-      io.rancher.scheduler.affinity:host_label: mosmetro=frontend
+      io.rancher.scheduler.affinity:host_label: mosmetro=statistics
   statsd:
     image: dsop/alpine-statsd:latest
     stdin_open: true
