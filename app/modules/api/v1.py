@@ -56,7 +56,9 @@ def download_php():
     if branch is None or branch not in data.keys():
         abort(404)
 
-    version = data[branch]['build' if data[branch]['by_build'] else 'version']
+    version = data[branch]['build'
+                           if data[branch]['by_build'] == "1"
+                           else 'version']
     increment('update.{0}'.format(branch), version)
 
     url = "/releases/" + data[branch]['filename']
