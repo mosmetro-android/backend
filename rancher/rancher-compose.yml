@@ -11,11 +11,13 @@ services:
     health_check:
       response_timeout: 2000
       healthy_threshold: 2
+      recreate_on_quorum_strategy_config:
+        quorum: 1
       port: 80
       unhealthy_threshold: 3
       initializing_timeout: 60000
       interval: 2000
-      strategy: recreate
+      strategy: recreateOnQuorum
       request_line: GET "/" "HTTP/1.0"
       reinitializing_timeout: 60000
     upgrade_strategy:
