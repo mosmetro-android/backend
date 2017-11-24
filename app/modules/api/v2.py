@@ -34,6 +34,8 @@ def statistics():
     if provider == "MosMetroV2":
         increment(base + 'segment', request.form.get('segment'))
         increment(base + 'ban_bypass', request.form.get('ban_bypass'))
-        increment(base + 'ban_count', request.form.get('ban_count'))
+        increment(base + 'banned_before', "true"
+                                          if request.form.get('ban_count') > 0
+                                          else "false")
 
     return ''
