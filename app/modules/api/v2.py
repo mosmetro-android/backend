@@ -26,6 +26,8 @@ def statistics():
     base = '{0}.{1}.{2}.'.format(build_branch, version, provider)
 
     # Common metrics
+    increment('success', request.form.get('success'))
+    increment('domain', request.environ.get('HTTP_HOST'))
     increment(base + 'success', request.form.get('success'))
 
     # Additional metrics for MosMetroV2
