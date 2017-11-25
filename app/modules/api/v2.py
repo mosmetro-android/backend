@@ -12,8 +12,8 @@ v2 = Blueprint('v2', __name__)
 @v2.route("/stats", methods=['POST'])
 def statistics():
     build_branch = request.form.get('build_branch')
-    build_number = request.form.get('build_number')
-    version_code = request.form.get('version_code')
+    build_number = int(request.form.get('build_number'))
+    version_code = int(request.form.get('version_code'))
     provider = request.form.get('provider')
 
     # Build number is 0 on branch 'play' and in Google Play
