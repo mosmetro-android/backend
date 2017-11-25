@@ -23,19 +23,26 @@ def statistics():
         version = build_number
 
     # Base name for all metrics from this client
-    base = '{0}.{1}.{2}.'.format(build_branch, version, provider)
+    common = '{0}.'.format(provider)
+    by_version = '{0}.{1}.{2}.'.format(build_branch, version, provider)
 
     # Common metrics
     increment('success', request.form.get('success'))
     increment('domain', request.environ.get('HTTP_HOST'))
-    increment(base + 'success', request.form.get('success'))
+
+    increment(common + 'success', request.form.get('success'))
+    increment(by_version + 'success', request.form.get('success'))
 
     # Additional metrics for MosMetroV2
     if provider == "MosMetroV2":
-        increment(base + 'segment', request.form.get('segment'))
-        increment(base + 'ban_bypass', request.form.get('ban_bypass'))
-        increment(base + 'banned_before',
-                  "true" if int(request.form.get('ban_count')) > 0
-                         else "false")
+        increment(common + 'segment', request.form.get('segment'))
+        increment(by_version + 'segment', request.form.get('segment'))
+
+        increment(common + 'ban_bypass', request.form.get('ban_bypass'))
+        increment(by_version + 'ban_bypass', request.form.get('ban_bypass'))
+
+        banned_before = str(int(request.form.get('ban_count')) > 0).lower()
+        increment(common + 'banned_before', banned_before)
+        increment(by_version + 'banned_before', banned_before)
 
     return ''
