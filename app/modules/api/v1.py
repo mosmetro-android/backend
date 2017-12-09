@@ -7,10 +7,9 @@ from ..util.config import config
 from ..util.stats import increment
 
 import redis
-import json
 
 from parse import parse
-from flask import url_for, Blueprint, render_template, request, abort
+from flask import url_for, Blueprint, render_template, request, abort, jsonify
 
 
 v1 = Blueprint('v1', __name__)
@@ -26,7 +25,7 @@ def branches_php():
     for branch in data.values():
         branch['url'] = '{0}?branch={1[name]}'.format(download, branch)
 
-    return json.dumps(data)
+    return jsonify(data)
 
 
 @v1.route("/download.php")
