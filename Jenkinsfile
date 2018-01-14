@@ -7,6 +7,7 @@ node('docker && rancher') {
     String branch = 'master'
 
     String docker_image = 'thedrhax/mosmetro-backend'
+    String rancher_url = 'http://rancher.thedrhax.pw:8080'
     String rancher_stack = 'mosmetro'
     String rancher_options = '--pull --force-upgrade --confirm-upgrade'
 
@@ -26,7 +27,21 @@ node('docker && rancher') {
     }
 
     stage('Deploy') {
-        sh 'cd rancher && rancher-compose --project-name ' + rancher_stack + ' up -d ' + rancher_options
+        env.RANCHER_URL = rancher_url
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'mosmetro',
+                usernameVariable: 'MOSMETRO_ADMIN',
+                passwordVariable: 'MOSMETRO_ADMIN_PASSWORD'
+            ),
+            usernamePassword(
+                credentialsId: 'rancher',
+                usernameVariable: 'RANCHER_ACCESS_KEY',
+                passwordVariable: 'RANCHER_SECRET_KEY'
+            )
+        ]) {
+            sh 'cd rancher && rancher-compose --project-name ' + rancher_stack + ' up -d ' + rancher_options
+        }
     }
 
     stage('Notify') {
