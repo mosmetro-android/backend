@@ -28,10 +28,11 @@ node('docker && rancher') {
 
     stage('Deploy') {
         env.RANCHER_URL = rancher_url
+        env.MOSMETRO_ADMIN = 'true'
         withCredentials([
             usernamePassword(
                 credentialsId: 'mosmetro',
-                usernameVariable: 'MOSMETRO_ADMIN',
+                usernameVariable: 'MOSMETRO_ADMIN_USERNAME',
                 passwordVariable: 'MOSMETRO_ADMIN_PASSWORD'
             ),
             usernamePassword(
