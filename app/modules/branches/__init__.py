@@ -18,7 +18,8 @@ cache = redis.StrictRedis(host=config['redis'])
 def generate():
     branches = dict()
     branches.update(Jenkins('https://jenkins.thedrhax.pw', 'MosMetro-Android'))
-    del branches['play']  # Branch 'play' must be loaded from GitHub
+    if branches.get('play'):  # Branch 'play' must be loaded from GitHub
+        del branches['play']
     branches.update(GitHub('mosmetro-android', 'mosmetro-android'))
     return branches
 
