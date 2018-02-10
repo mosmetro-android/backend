@@ -25,10 +25,17 @@ class JenkinsBranch(dict):
 
         message = "Сборка {0[name]}-#{0[build]}:\n".format(self)
 
-        if len(build['changeSet']['items']) == 0:
+        changes = []
+        if build.get('changeSet'):
+            changes += build['changeSet']['items']
+        elif build.get('changeSets'):
+            for cs in build['changeSets']:
+                changes += cs['items']
+
+        if len(changes) == 0:
             message += "¯\_(ツ)_/¯"
 
-        for change in build['changeSet']['items']:
+        for change in changes:
             message += "\n* {0[msg]}".format(change)
 
         self['message'] = message
