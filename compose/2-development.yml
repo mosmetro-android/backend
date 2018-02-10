@@ -11,6 +11,6 @@ services:
     links:
       - redis:redis
     environment:
-      CONFIG_ADMIN: "true"
+      MOSMETRO_ADMIN: "true"
     command: python /app/main.py
     restart: always
