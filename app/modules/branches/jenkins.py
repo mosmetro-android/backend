@@ -17,6 +17,7 @@ class JenkinsBranch(dict):
         artifact = [x for x in artifacts if 'signed' in x][0]
 
         self['name'] = name
+        self['description'] = branch['description']
         self['version'] = str(0)
         self['build'] = str(build['number'])
         self['by_build'] = str(1)
