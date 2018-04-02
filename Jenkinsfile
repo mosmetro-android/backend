@@ -15,7 +15,6 @@ node('docker && rancher') {
 
     stage('Pull') {
         git branch: branch, credentialsId: cred_git, url: repo_url
-        sh 'docker pull ' + docker_image + ':latest || true'
     }
 
     stage('Build') {
