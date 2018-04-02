@@ -5,6 +5,29 @@ import requests
 
 
 class JenkinsBranch(dict):
+    def _change_set_recursive(self, number):
+        url = '{0}/{1}/api/json'.format(self.base_url, number)
+        build = requests.get(url).json()
+        changes = self._change_set(build)
+
+        if len(changes) == 0:
+            return self._change_set_recursive(build['number'] - 1)
+
+        return changes
+
+    def _change_set(self, build):
+        changes = []
+        if build.get('changeSet'):
+            changes += build['changeSet']['items']
+        elif build.get('changeSets'):
+            for cs in build['changeSets']:
+                changes += cs['items']
+
+        if len(changes) == 0:
+            changes = self._change_set_recursive(build['number'] - 1)
+
+        return changes
+
     def __init__(self, project, name):
         self.base_url = '{0}/job/{1}'.format(project.base_url, name)
         self.api_url = '{0}/api/json'.format(self.base_url)
@@ -26,18 +49,16 @@ class JenkinsBranch(dict):
 
         message = "Сборка {0[name]}-#{0[build]}:\n".format(self)
 
-        changes = []
-        if build.get('changeSet'):
-            changes += build['changeSet']['items']
-        elif build.get('changeSets'):
-            for cs in build['changeSets']:
-                changes += cs['items']
+        try:
+            changes = self._change_set(build)
 
-        if len(changes) == 0:
+            if len(changes) == 0:
+                raise Exception("Empty change set")
+
+            for change in changes:
+                message += "\n* {0[msg]}".format(change)
+        except Exception:
             message += "¯\_(ツ)_/¯"
-
-        for change in changes:
-            message += "\n* {0[msg]}".format(change)
 
         self['message'] = message
 
