@@ -46,6 +46,13 @@ node('docker && rancher') {
     }
 
     stage('Notify') {
-        githubNotify status: "SUCCESS", credentialsId: cred_github, account: github_account, repo: github_repo, sha: branch
+        githubNotify(
+                status: "SUCCESS",
+                credentialsId: cred_github,
+                account: github_account,
+                repo: github_repo,
+                sha: branch
+        )
+        build job: 'MosMetro-Android-Backend', wait: false
     }
 }
