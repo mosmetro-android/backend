@@ -46,6 +46,7 @@ class JenkinsBranch(dict):
         self['by_build'] = str(1)
         self['url'] = "{0[url]}/artifact/{1}".format(build, artifact)
         self['filename'] = "MosMetro-{0[name]}-b{0[build]}.apk".format(self)
+        self.buildable = branch['buildable']
 
         message = "Сборка {0[name]}-#{0[build]}:\n".format(self)
 
@@ -75,7 +76,9 @@ class Jenkins(dict):
                     if branch['color'] != 'disabled']
 
         for branch in branches:
-            self[branch] = JenkinsBranch(self, branch)
+            t = JenkinsBranch(self, branch)
+            if t.buildable:
+                self[branch] = t
 
 
 if __name__ == "__main__":
