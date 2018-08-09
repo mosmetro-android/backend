@@ -28,7 +28,8 @@ class GitHub(dict):
         beta = json[0]
         play = [release for release in json if not release['prerelease']][0]
 
-        self['beta'] = GitHubBranch(self, 'beta', beta)
+        if config['github']['beta']:
+            self['beta'] = GitHubBranch(self, 'beta', beta)
         self['play'] = GitHubBranch(self, 'play', play)
 
 

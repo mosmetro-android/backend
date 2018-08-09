@@ -27,6 +27,7 @@ config = {
 
     "github": {
         "user": from_env("MOSMETRO_GITHUB_USER", "mosmetro-android"),
-        "repo": from_env("MOSMETRO_GITHUB_REPO", "mosmetro-android")
+        "repo": from_env("MOSMETRO_GITHUB_REPO", "mosmetro-android"),
+        "beta": from_env("MOSMETRO_GITHUB_BETA", "false").lower() == "true"
     }
 }
