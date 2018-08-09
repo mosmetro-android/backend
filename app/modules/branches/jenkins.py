@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import requests
+from ..util.config import config
 
 
 class JenkinsBranch(dict):
@@ -82,4 +83,4 @@ class Jenkins(dict):
 
 
 if __name__ == "__main__":
-    print(Jenkins('https://jenkins.thedrhax.pw', 'MosMetro-Android'))
+    print(Jenkins(config['jenkins']['url'], config['jenkins']['project']))

@@ -17,5 +17,16 @@ config = {
     "redis": from_env("MOSMETRO_REDIS", "redis"),
 
     "statsd": from_env("MOSMETRO_STATSD", "statsd"),
-    "statsd_prefix": from_env("MOSMETRO_STATSD_PREFIX", "mosmetro")
+    "statsd_prefix": from_env("MOSMETRO_STATSD_PREFIX", "mosmetro"),
+
+    "jenkins": {
+        "url": from_env("MOSMETRO_JENKINS_URL", "https://jenkins.thedrhax.pw"),
+        "project": from_env("MOSMETRO_JENKINS_PROJECT",
+                            "mosmetro-android-pipeline")
+    },
+
+    "github": {
+        "user": from_env("MOSMETRO_GITHUB_USER", "mosmetro-android"),
+        "repo": from_env("MOSMETRO_GITHUB_REPO", "mosmetro-android")
+    }
 }

@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import requests
+from ..util.config import config
 
 
 class GitHubBranch(dict):
@@ -32,4 +33,4 @@ class GitHub(dict):
 
 
 if __name__ == '__main__':
-    print(GitHub('mosmetro-android', 'mosmetro-android'))
+    print(GitHub(config['github']['user'], config['github']['repo']))
