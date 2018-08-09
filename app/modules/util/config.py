@@ -29,5 +29,8 @@ config = {
         "user": from_env("MOSMETRO_GITHUB_USER", "mosmetro-android"),
         "repo": from_env("MOSMETRO_GITHUB_REPO", "mosmetro-android"),
         "beta": from_env("MOSMETRO_GITHUB_BETA", "false").lower() == "true"
-    }
+    },
+
+    "stable_branches": from_env("MOSMETRO_BRANCHES_STABLE",
+                                "play beta master").split(" ")
 }

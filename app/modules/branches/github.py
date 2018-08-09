@@ -14,6 +14,7 @@ class GitHubBranch(dict):
         self['url'] = json['assets'][0]['browser_download_url']
         self['message'] = "{0[name]}:\n{0[body]}".format(json)
         self['filename'] = 'MosMetro-{0[name]}-v{0[version]}.apk'.format(self)
+        self['stable'] = name in config['stable_branches']
 
 
 class GitHub(dict):
