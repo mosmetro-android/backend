@@ -19,10 +19,19 @@ def generate():
     branches = dict()
     branches.update(Jenkins(config['jenkins']['url'],
                             config['jenkins']['project']))
+
     if branches.get('play'):  # Branch 'play' must be loaded from GitHub
+        play_description = branches['play'].get('description')
         del branches['play']
+    else:
+        play_description = 'Описание отсутствует'
+
     branches.update(GitHub(config['github']['user'],
                            config['github']['repo']))
+
+    if branches.get('play'):
+        branches.get('play')['description'] = play_description
+
     return branches
 
 
