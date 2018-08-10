@@ -79,7 +79,8 @@ class Jenkins(dict):
 
         for branch in branches:
             t = JenkinsBranch(self, branch)
-            if t.buildable:
+            if t.buildable and (t['name'][0] != '_' or
+                                not config['jenkins']['private_branches']):
                 self[branch] = t
 
 

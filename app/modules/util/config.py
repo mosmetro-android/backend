@@ -22,7 +22,11 @@ config = {
     "jenkins": {
         "url": from_env("MOSMETRO_JENKINS_URL", "https://jenkins.thedrhax.pw"),
         "project": from_env("MOSMETRO_JENKINS_PROJECT",
-                            "mosmetro-android-pipeline")
+                            "mosmetro-android-pipeline"),
+
+        # Ignore branches starting with '_'
+        "private_branches": from_env("MOSMETRO_JENKINS_PRIVATE_BRANCHES",
+                                     "false").lower() == "true"
     },
 
     "github": {
