@@ -26,7 +26,7 @@ config = {
 
         # Ignore branches starting with '_'
         "private_branches": from_env("MOSMETRO_JENKINS_PRIVATE_BRANCHES",
-                                     "false").lower() == "true"
+                                     "true").lower() == "true"
     },
 
     "github": {
