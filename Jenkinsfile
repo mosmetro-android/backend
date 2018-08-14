@@ -35,6 +35,11 @@ node('docker && rancher') {
                 passwordVariable: 'MOSMETRO_ADMIN_PASSWORD'
             ),
             usernamePassword(
+                credentialsId: 'mosmetro-acra',
+                usernameVariable: 'MOSMETRO_ACRA',
+                passwordVariable: 'HTPASSWD_BACKEND'
+            ),
+            usernamePassword(
                 credentialsId: 'rancher',
                 usernameVariable: 'RANCHER_ACCESS_KEY',
                 passwordVariable: 'RANCHER_SECRET_KEY'
