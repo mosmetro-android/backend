@@ -20,9 +20,13 @@ def branches_php():
     data = branches.get()
     download = "https://{0}{1}".format(request.environ['HTTP_HOST'],
                                        url_for('v1.download_php'))
+    cached = "https://{0}{1}".format(request.environ['HTTP_HOST'],
+                                     '/releases')
 
     # Override download links
     for branch in data.values():
+        branch['direct_url'] = branch['url']
+        branch['cached_url'] = '{0}/{1[filename]}'.format(cached, branch)
         branch['url'] = '{0}?branch={1[name]}'.format(download, branch)
 
     return jsonify(data)
