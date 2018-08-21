@@ -15,12 +15,6 @@ services:
         service: mosmetro
         source_port: 80
         target_port: 80
-      - path: /releases
-        priority: 2
-        protocol: http
-        service: mosmetro
-        source_port: 80
-        target_port: 80
       - hostname: ''
         path: /
         priority: 2
