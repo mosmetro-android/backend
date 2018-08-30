@@ -6,18 +6,20 @@ fi
 
 export COMPOSE_PROJECT_NAME="mosmetro"
 
+COMPOSE_FILE="compose/1-common.yml"
+
 case $1 in
     dev|development)
-        export COMPOSE_FILE="compose/1-common.yml:compose/2-development.yml" ;;
+        export COMPOSE_FILE="${COMPOSE_FILE}:compose/2-development.yml" ;;
 
     prod|production)
-        export COMPOSE_FILE="compose/1-common.yml:compose/2-production.yml" ;;
+        export COMPOSE_FILE="${COMPOSE_FILE}:compose/2-production.yml" ;;
 esac
 
 shift
 for arg in $@; do
     case $arg in
         stat|statistics)
-            export COMPOSE_FILE="$COMPOSE_FILE:compose/3-statistics.yml" ;;
+            export COMPOSE_FILE="${COMPOSE_FILE}:compose/3-statistics.yml" ;;
     esac
 done
