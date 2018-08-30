@@ -1,12 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from ..util.stats import increment
+from ..util.stats import increment, gauge
 
 from flask import Blueprint, request
 
 
 v2 = Blueprint('v2', __name__)
+
+
+def mosmetrov2(prefix):
+    increment(prefix + 'segment', request.form.get('segment'))
+    increment(prefix + 'v3_bypass', request.form.get('v3_bypass'))
+
+    banned_before = str(int(request.form.get('ban_count')) > 0).lower()
+    increment(prefix + 'banned_before', banned_before)
+
+
+def mosmetrov3(prefix):
+    increment(prefix + 'switch', request.form.get('switch'))
+    increment(prefix + 'override', request.form.get('override'))
+
+    if request.form.get('switch') == 'MosMetroV2':
+        mosmetrov2(prefix)
+        mosmetrov2(prefix + '.MosMetroV2')
 
 
 @v2.route("/stats", methods=['POST'])
@@ -33,16 +50,17 @@ def statistics():
     increment(common + 'success', request.form.get('success'))
     increment(by_version + 'success', request.form.get('success'))
 
+    gauge(common + 'duration', request.form.get('duration'))
+    gauge(by_version + 'duration', request.form.get('duration'))
+
     # Additional metrics for MosMetroV2
     if provider == "MosMetroV2":
-        increment(common + 'segment', request.form.get('segment'))
-        increment(by_version + 'segment', request.form.get('segment'))
+        mosmetrov2(common)
+        mosmetrov2(by_version)
 
-        increment(common + 'ban_bypass', request.form.get('ban_bypass'))
-        increment(by_version + 'ban_bypass', request.form.get('ban_bypass'))
-
-        banned_before = str(int(request.form.get('ban_count')) > 0).lower()
-        increment(common + 'banned_before', banned_before)
-        increment(by_version + 'banned_before', banned_before)
+    # Additional metrics for MosMetroV3
+    if provider == "MosMetroV3":
+        mosmetrov3(common)
+        mosmetrov3(by_version)
 
     return ''

@@ -22,3 +22,10 @@ def escape(input):
 
 def increment(path, name):
     client.incr("{0}.{1}".format(path, escape(name)))
+
+
+def gauge(path, value):
+    try:
+        client.gauge(path, int(value))
+    except TypeError:
+        return
