@@ -23,7 +23,7 @@ def mosmetrov3(prefix):
 
     if request.form.get('switch') == 'MosMetroV2':
         mosmetrov2(prefix)
-        mosmetrov2(prefix + '.MosMetroV2.')
+        mosmetrov2(prefix + 'MosMetroV2.')
 
 
 @v2.route("/stats", methods=['POST'])
