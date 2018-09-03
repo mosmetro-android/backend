@@ -33,8 +33,7 @@ def statistics():
     version_code = int(request.form.get('version_code'))
     provider = request.form.get('provider')
 
-    # Build number is 0 on branch 'play' and in Google Play
-    if build_number == 0:
+    if build_branch not in ['play', 'beta']:
         version = version_code
     else:
         version = build_number
@@ -44,9 +43,12 @@ def statistics():
     by_version = '{0}.{1}.{2}.'.format(build_branch, version, provider)
 
     # Common metrics
-    increment('success', request.form.get('success'))
     increment('domain', request.environ.get('HTTP_HOST'))
 
+    increment('version.name', request.form.get('version_name'))
+    increment('version.code', version_code)
+
+    increment('success', request.form.get('success'))
     increment(common + 'success', request.form.get('success'))
     increment(by_version + 'success', request.form.get('success'))
 
@@ -54,12 +56,12 @@ def statistics():
     gauge(by_version + 'duration', request.form.get('duration'))
 
     # Additional metrics for MosMetroV2
-    if provider == "MosMetroV2":
+    if provider == 'MosMetroV2':
         mosmetrov2(common)
         mosmetrov2(by_version)
 
     # Additional metrics for MosMetroV3
-    if provider == "MosMetroV3":
+    if provider == 'MosMetroV3':
         mosmetrov3(common)
         mosmetrov3(by_version)
 
