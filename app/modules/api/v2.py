@@ -56,7 +56,7 @@ def statistics():
     gauge(by_version + 'duration', request.form.get('duration'))
 
     # Additional metrics for MosMetroV2
-    if provider == 'MosMetroV2':
+    if provider == 'MosMetroV2' or provider == 'MosMetroV2WV':
         mosmetrov2(common)
         mosmetrov2(by_version)
 
