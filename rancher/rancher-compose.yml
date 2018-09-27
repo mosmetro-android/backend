@@ -18,7 +18,7 @@ services:
       initializing_timeout: 60000
       interval: 2000
       strategy: recreateOnQuorum
-      request_line: GET "/" "HTTP/1.0"
+      request_line: GET "/?healthcheck" "HTTP/1.0"
       reinitializing_timeout: 60000
     upgrade_strategy:
       start_first: true
