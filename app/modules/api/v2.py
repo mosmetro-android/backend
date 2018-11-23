@@ -33,7 +33,7 @@ def statistics():
     version_code = int(request.form.get('version_code'))
     provider = request.form.get('provider')
 
-    if build_branch not in ['play', 'beta']:
+    if build_branch in ['play', 'beta']:
         version = version_code
     else:
         version = build_number
