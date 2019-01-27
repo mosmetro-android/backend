@@ -31,17 +31,9 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label: mosmetro=frontend
     environment:
-      CONFIG_EVAL: |-
-        if ! grep -q graphite /etc/influxdb/influxdb.conf; then
-          echo [[graphite]];
-          echo '  'enabled = true;
-          echo '  'bind-address = \":2003\";
-          echo '  'protocol = \"tcp\";
-        fi
-    entrypoint: /bin/sh
-    command:
-    - -c
-    - eval $$CONFIG_EVAL >> /etc/influxdb/influxdb.conf; /entrypoint.sh influxd
+      INFLUXDB_DATA_QUERY_LOG_ENABLED: false
+      INFLUXDB_GRAPHITE_ENABLED: true
+      INFLUXDB_REPORTING_DISABLED: true
   influxdb-proxy:
     image: thedrhax/influxdb-timeshift-proxy
     environment:
