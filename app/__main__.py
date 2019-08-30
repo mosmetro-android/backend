@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from modules import api
+from . import api
 from flask import Flask, render_template
 
 
