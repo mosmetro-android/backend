@@ -16,6 +16,8 @@ config = {
 
     "redis": from_env("MOSMETRO_REDIS", "localhost"),
 
+    "metrics_port": from_env("MOSMETRO_METRICS_PORT", "9100"),
+
     "jenkins": {
         "url": from_env("MOSMETRO_JENKINS_URL", "https://jenkins.thedrhax.pw"),
         "project": from_env("MOSMETRO_JENKINS_PROJECT",

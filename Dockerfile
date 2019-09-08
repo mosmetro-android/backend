@@ -19,5 +19,5 @@ ADD app /app/app/
 ADD uwsgi.ini /app/
 ADD container /
 
-EXPOSE 80
+EXPOSE 80 9100
 CMD ["/usr/bin/supervisord"]

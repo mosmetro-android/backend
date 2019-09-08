@@ -1,4 +1,5 @@
 flask
+prometheus_flask_exporter
 requests
 requests-cache
 redis
