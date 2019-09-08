@@ -14,7 +14,7 @@ config = {
     "admin_username": from_env("MOSMETRO_ADMIN_USERNAME", "admin"),
     "admin_password": from_env("MOSMETRO_ADMIN_PASSWORD", "admin"),
 
-    "redis": from_env("MOSMETRO_REDIS", "redis"),
+    "redis": from_env("MOSMETRO_REDIS", "localhost"),
 
     "jenkins": {
         "url": from_env("MOSMETRO_JENKINS_URL", "https://jenkins.thedrhax.pw"),
