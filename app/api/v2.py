@@ -52,6 +52,14 @@ def statistics():
     labels = [branch, version, provider, connected]
     metric_connect.labels(*labels).inc()
 
+    if duration is not None:
+        labels = [branch, version, provider, connected]
+        if duration.isdigit():
+            metric_duration.labels(*labels).set(int(duration))
+
+    if not connected:
+        return ''
+
     if provider == 'MosMetroV3':
         next_provider: str = request.form.get('switch')
         labels = [branch, version, next_provider]
@@ -70,10 +78,5 @@ def statistics():
 
         labels = [branch, version, segment, mmv3_bypass, unbanned]
         metric_mmv2.labels(*labels).inc()
-
-    if duration is not None:
-        labels = [branch, version, provider, connected]
-        if duration.isdigit():
-            metric_duration.labels(*labels).set(int(duration))
 
     return ''
