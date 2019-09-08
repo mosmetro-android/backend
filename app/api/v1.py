@@ -7,11 +7,16 @@ from ..util.config import config
 
 import redis
 
-from parse import parse
+from prometheus_client import Counter
 from flask import url_for, Blueprint, render_template, request, abort, jsonify
 
 
 v1 = Blueprint('v1', __name__)
+
+
+metric_download = Counter('mosmetro_download',
+                          'Total number of APK downloads',
+                          ['branch', 'version'])
 
 
 @v1.route("/branches.php")
@@ -58,10 +63,9 @@ def download_php():
     if branch is None or branch not in data.keys():
         abort(404)
 
-    version = data[branch]['build'
-                           if data[branch]['by_build'] == "1"
-                           else 'version']
-    # increment('update.{0}'.format(branch), version)
+    version_key = 'build' if data[branch]['by_build'] == '1' else 'version'
+    version = data[branch][version_key]
+    metric_download.labels(branch, version).inc()
 
     url = "/releases/" + data[branch]['filename']
     return render_template('redirect.html', url=url)
@@ -69,24 +73,4 @@ def download_php():
 
 @v1.route("/statistics.php", methods=['POST'])
 def statistics():
-    # increment('success', request.form.get('success'))
-    # increment('captcha', request.form.get('captcha'))
-    # increment('segment', request.form.get('segment'))
-    # increment('domain', request.environ.get('HTTP_HOST'))
-
-    version = request.form.get('version')
-    if version is not None:
-        parsed = parse('{name}-{code:d}', version)
-        # try:
-        #     increment('version.name', parsed['name'])
-        #     increment('version.code', parsed['code'])
-        # except KeyError:
-        #     pass
-
-    for p in ['p', 'provider']:
-        provider = request.form.get(p)
-        if provider is not None:
-            # increment('provider', provider)
-            break
-
     return ''

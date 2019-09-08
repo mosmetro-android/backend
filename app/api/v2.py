@@ -2,65 +2,78 @@
 # -*- coding: UTF-8 -*-
 
 from flask import Blueprint, request
+from prometheus_client import Counter, Gauge
 
 
 v2 = Blueprint('v2', __name__)
 
 
-def mosmetrov2(prefix):
-    # increment(prefix + 'segment', request.form.get('segment'))
-    # increment(prefix + 'v3_bypass', request.form.get('v3_bypass'))
+metric_connect = Counter('mosmetro_connect',
+                         'Total number of connections',
+                         ['branch',
+                          'version',
+                          'provider',
+                          'connected'])
 
-    banned_before = str(int(request.form.get('ban_count')) > 0).lower()
-    # increment(prefix + 'banned_before', banned_before)
+metric_duration = Gauge('mosmetro_connect_duration',
+                        'Provider execution time',
+                        ['branch',
+                         'version',
+                         'provider',
+                         'connected'])
 
+metric_mmv2 = Counter('mosmetro_connect_mmv2',
+                      'Total number of MosMetroV2 connections',
+                      ['branch',
+                       'version',
+                       'segment',
+                       'mmv3_bypass',
+                       'unbanned'])
 
-def mosmetrov3(prefix):
-    # increment(prefix + 'switch', request.form.get('switch'))
-    # increment(prefix + 'override', request.form.get('override'))
-
-    if request.form.get('switch') == 'MosMetroV2':
-        mosmetrov2(prefix)
-        mosmetrov2(prefix + 'MosMetroV2.')
+metric_mmv3 = Counter('mosmetro_connect_mmv3',
+                      'Total number of MosMetroV3 connections',
+                      ['branch',
+                       'version',
+                       'next_provider'])
 
 
 @v2.route("/stats", methods=['POST'])
 def statistics():
-    build_branch = request.form.get('build_branch')
-    build_number = int(request.form.get('build_number'))
-    version_code = int(request.form.get('version_code'))
-    provider = request.form.get('provider')
+    branch: str = request.form.get('build_branch')
+    build: int = int(request.form.get('build_number'))
+    version: int = int(request.form.get('version_code'))
+    provider: str = request.form.get('provider')
+    connected: bool = request.form.get('success') == 'true'
+    duration: str = request.form.get('duration')
 
-    if build_branch in ['play', 'beta']:
-        version = version_code
-    else:
-        version = build_number
+    if branch not in ['play', 'beta']:
+        version = build
 
-    # Base name for all metrics from this client
-    common = '{0}.'.format(provider)
-    by_version = '{0}.{1}.{2}.'.format(build_branch, version, provider)
+    labels = [branch, version, provider, connected]
+    metric_connect.labels(*labels).inc()
 
-    # Common metrics
-    # increment('domain', request.environ.get('HTTP_HOST'))
-
-    # increment('version.name', request.form.get('version_name'))
-    # increment('version.code', version_code)
-
-    # increment('success', request.form.get('success'))
-    # increment(common + 'success', request.form.get('success'))
-    # increment(by_version + 'success', request.form.get('success'))
-
-    # gauge(common + 'duration', request.form.get('duration'))
-    # gauge(by_version + 'duration', request.form.get('duration'))
-
-    # Additional metrics for MosMetroV2
-    if provider == 'MosMetroV2' or provider == 'MosMetroV2WV':
-        mosmetrov2(common)
-        mosmetrov2(by_version)
-
-    # Additional metrics for MosMetroV3
     if provider == 'MosMetroV3':
-        mosmetrov3(common)
-        mosmetrov3(by_version)
+        next_provider: str = request.form.get('switch')
+        labels = [branch, version, next_provider]
+        metric_mmv3.labels(*labels).inc()
+        provider = next_provider
+
+    if provider in ['MosMetroV2', 'MosMetroV2WV']:
+        segment: str = request.form.get('segment') or 'unknown'
+        mmv3_bypass: bool = request.form.get('v3_bypass') == 'true'
+        ban_count: str = request.form.get('ban_count')
+
+        if ban_count is not None and ban_count.isdigit():
+            unbanned = int(ban_count) > 0
+        else:
+            unbanned = None
+
+        labels = [branch, version, segment, mmv3_bypass, unbanned]
+        metric_mmv2.labels(*labels).inc()
+
+    if duration is not None:
+        labels = [branch, version, provider, connected]
+        if duration.isdigit():
+            metric_duration.labels(*labels).set(int(duration))
 
     return ''

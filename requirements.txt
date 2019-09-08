@@ -1,8 +1,8 @@
 flask
+prometheus_client
 prometheus_flask_exporter
 requests
 requests-cache
 redis
 python-redis-lock
-parse
 uwsgi
