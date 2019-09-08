@@ -4,7 +4,6 @@
 from .. import branches
 from ..branches.github import GitHub
 from ..util.config import config
-from ..util.stats import increment
 
 import redis
 
@@ -62,7 +61,7 @@ def download_php():
     version = data[branch]['build'
                            if data[branch]['by_build'] == "1"
                            else 'version']
-    increment('update.{0}'.format(branch), version)
+    # increment('update.{0}'.format(branch), version)
 
     url = "/releases/" + data[branch]['filename']
     return render_template('redirect.html', url=url)
@@ -70,24 +69,24 @@ def download_php():
 
 @v1.route("/statistics.php", methods=['POST'])
 def statistics():
-    increment('success', request.form.get('success'))
-    increment('captcha', request.form.get('captcha'))
-    increment('segment', request.form.get('segment'))
-    increment('domain', request.environ.get('HTTP_HOST'))
+    # increment('success', request.form.get('success'))
+    # increment('captcha', request.form.get('captcha'))
+    # increment('segment', request.form.get('segment'))
+    # increment('domain', request.environ.get('HTTP_HOST'))
 
     version = request.form.get('version')
     if version is not None:
         parsed = parse('{name}-{code:d}', version)
-        try:
-            increment('version.name', parsed['name'])
-            increment('version.code', parsed['code'])
-        except KeyError:
-            pass
+        # try:
+        #     increment('version.name', parsed['name'])
+        #     increment('version.code', parsed['code'])
+        # except KeyError:
+        #     pass
 
     for p in ['p', 'provider']:
         provider = request.form.get(p)
         if provider is not None:
-            increment('provider', provider)
+            # increment('provider', provider)
             break
 
     return ''

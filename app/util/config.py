@@ -16,9 +16,6 @@ config = {
 
     "redis": from_env("MOSMETRO_REDIS", "redis"),
 
-    "statsd": from_env("MOSMETRO_STATSD", "statsd"),
-    "statsd_prefix": from_env("MOSMETRO_STATSD_PREFIX", "mosmetro"),
-
     "jenkins": {
         "url": from_env("MOSMETRO_JENKINS_URL", "https://jenkins.thedrhax.pw"),
         "project": from_env("MOSMETRO_JENKINS_PROJECT",

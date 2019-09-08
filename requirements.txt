@@ -3,6 +3,5 @@ requests
 requests-cache
 redis
 python-redis-lock
-statsd
 parse
 uwsgi

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from ..util.stats import increment, gauge
-
 from flask import Blueprint, request
 
 
@@ -10,16 +8,16 @@ v2 = Blueprint('v2', __name__)
 
 
 def mosmetrov2(prefix):
-    increment(prefix + 'segment', request.form.get('segment'))
-    increment(prefix + 'v3_bypass', request.form.get('v3_bypass'))
+    # increment(prefix + 'segment', request.form.get('segment'))
+    # increment(prefix + 'v3_bypass', request.form.get('v3_bypass'))
 
     banned_before = str(int(request.form.get('ban_count')) > 0).lower()
-    increment(prefix + 'banned_before', banned_before)
+    # increment(prefix + 'banned_before', banned_before)
 
 
 def mosmetrov3(prefix):
-    increment(prefix + 'switch', request.form.get('switch'))
-    increment(prefix + 'override', request.form.get('override'))
+    # increment(prefix + 'switch', request.form.get('switch'))
+    # increment(prefix + 'override', request.form.get('override'))
 
     if request.form.get('switch') == 'MosMetroV2':
         mosmetrov2(prefix)
@@ -43,17 +41,17 @@ def statistics():
     by_version = '{0}.{1}.{2}.'.format(build_branch, version, provider)
 
     # Common metrics
-    increment('domain', request.environ.get('HTTP_HOST'))
+    # increment('domain', request.environ.get('HTTP_HOST'))
 
-    increment('version.name', request.form.get('version_name'))
-    increment('version.code', version_code)
+    # increment('version.name', request.form.get('version_name'))
+    # increment('version.code', version_code)
 
-    increment('success', request.form.get('success'))
-    increment(common + 'success', request.form.get('success'))
-    increment(by_version + 'success', request.form.get('success'))
+    # increment('success', request.form.get('success'))
+    # increment(common + 'success', request.form.get('success'))
+    # increment(by_version + 'success', request.form.get('success'))
 
-    gauge(common + 'duration', request.form.get('duration'))
-    gauge(by_version + 'duration', request.form.get('duration'))
+    # gauge(common + 'duration', request.form.get('duration'))
+    # gauge(by_version + 'duration', request.form.get('duration'))
 
     # Additional metrics for MosMetroV2
     if provider == 'MosMetroV2' or provider == 'MosMetroV2WV':
