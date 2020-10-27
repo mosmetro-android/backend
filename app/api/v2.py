@@ -66,7 +66,7 @@ def statistics():
         metric_mmv3.labels(*labels).inc()
         provider = next_provider
 
-    if provider in ['MosMetroV2', 'MosMetroV2WV']:
+    if provider in ['MosMetroV2', 'MosMetroV2WV', 'MosMetroV2mcc']:
         segment: str = request.form.get('segment') or 'unknown'
         mmv3_bypass: bool = request.form.get('v3_bypass') == 'true'
         ban_count: str = request.form.get('ban_count')
