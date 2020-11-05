@@ -51,6 +51,7 @@ def statistics():
         version = build
 
     metric_connect.labels(branch, version, success).inc()
+    metric_provider.labels(branch, version, provider).inc()
 
     if not success:
         return ''
