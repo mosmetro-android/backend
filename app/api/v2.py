@@ -8,33 +8,35 @@ from prometheus_client import Counter, Gauge
 v2 = Blueprint('v2', __name__)
 
 
-metric_connect = Counter('mosmetro_connect',
-                         'Total number of connections',
-                         ['branch',
-                          'version',
-                          'provider',
-                          'connected'])
+metric_connect = Counter(
+    'mosmetro_connection',
+    'Total number of connections',
+    ['branch', 'version', 'success'])
 
-metric_duration = Gauge('mosmetro_connect_duration',
-                        'Provider execution time',
-                        ['branch',
-                         'version',
-                         'provider',
-                         'connected'])
+metric_ssid = Counter(
+    'mosmetro_ssid',
+    'Number of connections per SSID',
+    ['provider', 'ssid'])
 
-metric_mmv2 = Counter('mosmetro_connect_mmv2',
-                      'Total number of MosMetroV2 connections',
-                      ['branch',
-                       'version',
-                       'segment',
-                       'mmv3_bypass',
-                       'unbanned'])
+metric_provider = Counter(
+    'mosmetro_provider',
+    'Number of successful connections per provider',
+    ['branch', 'version', 'provider'])
 
-metric_mmv3 = Counter('mosmetro_connect_mmv3',
-                      'Total number of MosMetroV3 connections',
-                      ['branch',
-                       'version',
-                       'next_provider'])
+metric_duration = Gauge(
+    'mosmetro_duration',
+    'Provider execution time in milliseconds',
+    ['branch', 'version', 'provider'])
+
+metric_mmv2_segment = Counter(
+    'mosmetro_v2_segment',
+    'Number of successful connections per MosMetroV2 segment',
+    ['branch', 'version', 'segment'])
+
+metric_switch = Counter(
+    'mosmetro_provider_switch',
+    'Number of switches from one provider to another',
+    ['from', 'to'])
 
 
 @v2.route("/stats", methods=['POST'])
@@ -43,40 +45,30 @@ def statistics():
     build: int = int(request.form.get('build_number'))
     version: int = int(request.form.get('version_code'))
     provider: str = request.form.get('provider')
-    connected: bool = request.form.get('success') == 'true'
-    duration: str = request.form.get('duration')
+    success: bool = request.form.get('success') == 'true'
 
     if branch not in ['play', 'beta']:
         version = build
 
-    labels = [branch, version, provider, connected]
-    metric_connect.labels(*labels).inc()
+    metric_connect.labels(branch, version, success).inc()
 
-    if duration is not None:
-        labels = [branch, version, provider, connected]
-        if duration.isdigit():
-            metric_duration.labels(*labels).set(int(duration))
-
-    if not connected:
+    if not success:
         return ''
 
-    if provider == 'MosMetroV3':
-        next_provider: str = request.form.get('switch')
-        labels = [branch, version, next_provider]
-        metric_mmv3.labels(*labels).inc()
-        provider = next_provider
+    duration: str = request.form.get('duration')
+    if duration is not None and duration.isdigit():
+        metric_duration.labels(branch, version, provider).set(int(duration))
 
-    if provider in ['MosMetroV2', 'MosMetroV2WV', 'MosMetroV2mcc']:
-        segment: str = request.form.get('segment') or 'unknown'
-        mmv3_bypass: bool = request.form.get('v3_bypass') == 'true'
-        ban_count: str = request.form.get('ban_count')
+    switch: str = request.form.get('switch')
+    if switch:
+        metric_switch.labels(provider, switch).inc()
 
-        if ban_count is not None and ban_count.isdigit():
-            unbanned = int(ban_count) > 0
-        else:
-            unbanned = None
+    segment: str = request.form.get('segment')
+    if segment:
+        metric_mmv2_segment.labels(branch, version, segment).inc()
 
-        labels = [branch, version, segment, mmv3_bypass, unbanned]
-        metric_mmv2.labels(*labels).inc()
+    ssid: str = request.form.get('ssid')
+    if ssid and ssid != '<unknown ssid>':
+        metric_ssid.labels(provider, ssid).inc()
 
     return ''
