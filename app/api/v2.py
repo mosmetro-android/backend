@@ -33,6 +33,11 @@ metric_mmv2_segment = Counter(
     'Number of successful connections per MosMetroV2 segment',
     ['branch', 'version', 'segment'])
 
+metric_mmv2_branch = Counter(
+    'mosmetro_v2_branch',
+    'Association between V2 segments and branches',
+    ['segment', 'branch'])
+
 metric_switch = Counter(
     'mosmetro_provider_switch',
     'Number of switches from one provider to another',
@@ -66,8 +71,12 @@ def statistics():
         metric_switch.labels(provider, switch).inc()
 
     segment: str = request.form.get('segment')
+    provider_branch: str = request.form.get('branch')
     if segment:
         metric_mmv2_segment.labels(branch, version, segment).inc()
+
+        if provider_branch:
+            metric_mmv2_branch.labels(segment, provider_branch).inc()
 
     ssid: str = request.form.get('ssid')
     if ssid and ssid != '<unknown ssid>':
