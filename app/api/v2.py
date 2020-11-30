@@ -50,14 +50,14 @@ def statistics():
     build: int = int(request.form.get('build_number'))
     version: int = int(request.form.get('version_code'))
     provider: str = request.form.get('provider')
-    success: bool = request.form.get('success') == 'true'
+    success: bool = request.form.get('success')
 
     if branch not in ['play', 'beta']:
         version = build
 
     metric_connect.labels(branch, version, success).inc()
 
-    if not success:
+    if success not in ['true', 'midsession']:
         return ''
 
     metric_provider.labels(branch, version, provider).inc()
