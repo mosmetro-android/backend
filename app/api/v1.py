@@ -10,6 +10,10 @@ from flask import url_for, Blueprint, render_template, request, abort, jsonify
 v1 = Blueprint('v1', __name__)
 
 
+metric_update_check = Counter('mosmetro_update_check',
+                              'Total number of update check requests')
+
+
 metric_download = Counter('mosmetro_download',
                           'Total number of APK downloads',
                           ['branch', 'version'])
@@ -17,6 +21,8 @@ metric_download = Counter('mosmetro_download',
 
 @v1.route("/branches.php")
 def branches_php():
+    metric_update_check.inc()
+
     data = branches.get()
     download = "https://{0}{1}".format(request.environ['HTTP_HOST'],
                                        url_for('v1.download_php'))
