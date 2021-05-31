@@ -28,6 +28,11 @@ metric_duration = Gauge(
     'Provider execution time in milliseconds',
     ['branch', 'version', 'provider'])
 
+metric_sdk = Counter(
+    'mosmetro_sdk',
+    'Number of connections per Android SDK level',
+    ['level'])
+
 metric_mmv2_segment = Counter(
     'mosmetro_v2_segment',
     'Number of successful connections per MosMetroV2 segment',
@@ -81,5 +86,9 @@ def statistics():
     ssid: str = request.form.get('ssid')
     if ssid and ssid != '<unknown ssid>':
         metric_ssid.labels(provider, ssid).inc()
+
+    api_level: str = request.form.get('api_level')
+    if api_level is not None and api_level.isdigit():
+        metric_sdk.labels(int(api_level)).inc()
 
     return ''
