@@ -1,6 +1,5 @@
 from flask import Flask, render_template
 
-from .metrics import metrics
 from . import api, models
 
 
@@ -9,7 +8,6 @@ app = Flask(__name__)
 
 models.init()
 api.register(app)
-metrics.init_app(app)
 
 
 @app.route("/")

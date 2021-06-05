@@ -13,5 +13,5 @@ ADD migrations /app/migrations/
 ADD uwsgi.ini migrations.json /app/
 ADD container /
 
-EXPOSE 80 9100
+EXPOSE 80
 CMD ["/usr/bin/supervisord"]
