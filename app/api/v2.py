@@ -54,54 +54,55 @@ def statistics():
     build: int = int(request.form.get('build_number'))
     version: int = int(request.form.get('version_code'))
     provider: str = request.form.get('provider')
-    success: bool = request.form.get('success')
-
-    if branch not in ['play', 'beta']:
-        version = build
+    result: str = request.form.get('success')
 
     item = MetricConnection(branch=branch,
                       build=build,
                       version=version,
                       provider=provider,
-                      success=success != 'false',
-                      midsession=success == 'midsession')
+                      success=result != 'false',
+                      midsession=result == 'midsession')
 
-    metric_connect.labels(branch, version, success).inc()
+    metric_connect.labels(branch, version, result).inc()
 
-    if success not in ['true', 'midsession']:
-        return ''
-
-    metric_provider.labels(branch, version, provider).inc()
+    if result not in ['true', 'midsession']:
+        metric_provider.labels(branch, version, provider).inc()
 
     duration: str = request.form.get('duration')
     if duration is not None and duration.isdigit():
         item.duration = int(duration)
-        metric_duration.labels(branch, version, provider).set(int(duration))
+        if result not in ['true', 'midsession']:
+            metric_duration.labels(branch, version, provider).set(int(duration))
 
     switch: str = request.form.get('switch')
     if switch:
         item.switch = switch
-        metric_switch.labels(provider, switch).inc()
+        if result not in ['true', 'midsession']:
+            metric_switch.labels(provider, switch).inc()
 
     segment: str = request.form.get('segment')
     provider_branch: str = request.form.get('branch')
     if segment:
         item.segment = segment
-        metric_mmv2_segment.labels(branch, version, segment).inc()
+        if result not in ['true', 'midsession']:
+            metric_mmv2_segment.labels(branch, version, segment).inc()
 
         if provider_branch:
             item.provider_branch = provider_branch
-            metric_mmv2_branch.labels(segment, provider_branch).inc()
+            if result not in ['true', 'midsession']:
+                metric_mmv2_branch.labels(segment, provider_branch).inc()
 
     ssid: str = request.form.get('ssid')
     if ssid and ssid != '<unknown ssid>':
         item.ssid = ssid
-        metric_ssid.labels(provider, ssid).inc()
+        if result not in ['true', 'midsession']:
+            metric_ssid.labels(provider, ssid).inc()
 
     api_level: str = request.form.get('api_level')
     if api_level is not None and api_level.isdigit():
         item.android = int(api_level)
-        metric_sdk.labels(int(api_level)).inc()
+        if result not in ['true', 'midsession']:
+            metric_sdk.labels(int(api_level)).inc()
 
     uuid: str = request.form.get('uuid')
     if uuid is not None:
