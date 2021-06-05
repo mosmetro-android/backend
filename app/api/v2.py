@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
+from uuid import UUID
 from flask import Blueprint, request
 from prometheus_client import Counter, Gauge
+from ..models.metrics import MetricConnection
 
 
 v2 = Blueprint('v2', __name__)
@@ -60,6 +59,13 @@ def statistics():
     if branch not in ['play', 'beta']:
         version = build
 
+    item = MetricConnection(branch=branch,
+                      build=build,
+                      version=version,
+                      provider=provider,
+                      success=success != 'false',
+                      midsession=success == 'midsession')
+
     metric_connect.labels(branch, version, success).inc()
 
     if success not in ['true', 'midsession']:
@@ -69,26 +75,38 @@ def statistics():
 
     duration: str = request.form.get('duration')
     if duration is not None and duration.isdigit():
+        item.duration = int(duration)
         metric_duration.labels(branch, version, provider).set(int(duration))
 
     switch: str = request.form.get('switch')
     if switch:
+        item.switch = switch
         metric_switch.labels(provider, switch).inc()
 
     segment: str = request.form.get('segment')
     provider_branch: str = request.form.get('branch')
     if segment:
+        item.segment = segment
         metric_mmv2_segment.labels(branch, version, segment).inc()
 
         if provider_branch:
+            item.provider_branch = provider_branch
             metric_mmv2_branch.labels(segment, provider_branch).inc()
 
     ssid: str = request.form.get('ssid')
     if ssid and ssid != '<unknown ssid>':
+        item.ssid = ssid
         metric_ssid.labels(provider, ssid).inc()
 
     api_level: str = request.form.get('api_level')
     if api_level is not None and api_level.isdigit():
+        item.android = int(api_level)
         metric_sdk.labels(int(api_level)).inc()
+
+    uuid: str = request.form.get('uuid')
+    if uuid is not None:
+        item.uuid = UUID(uuid)
+
+    item.save()
 
     return ''

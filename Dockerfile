@@ -1,22 +1,16 @@
-FROM python:3-alpine
+FROM alpine:3.13
 
-MAINTAINER Dmitry Karikh <the.dr.hax@gmail.com>
-
-# Install uWSGI
-RUN apk --no-cache add gcc linux-headers musl-dev \
- && pip install uwsgi \
- && apk del gcc linux-headers musl-dev
-
-# Install NGINX and supervisor
-RUN apk --no-cache add nginx supervisor
+# Install packages
+RUN apk --no-cache add python3 uwsgi-python3 nginx supervisor py3-psycopg2 py3-pip
 
 # Install dependencies
 ADD requirements.txt /app/
-RUN pip install -r /app/requirements.txt
+RUN pip3 install -r /app/requirements.txt
 
 # Add app files
 ADD app /app/app/
-ADD uwsgi.ini /app/
+ADD migrations /app/migrations/
+ADD uwsgi.ini migrations.json /app/
 ADD container /
 
 EXPOSE 80 9100

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
 import os
 
 
@@ -15,6 +12,7 @@ config = {
     "admin_password": from_env("MOSMETRO_ADMIN_PASSWORD", "admin"),
 
     "redis": from_env("MOSMETRO_REDIS", "localhost"),
+    "sql": from_env("MOSMETRO_SQL", "sqlite:///:memory:"),
 
     "metrics_port": from_env("MOSMETRO_METRICS_PORT", "9100"),
 

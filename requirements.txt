@@ -1,8 +1,9 @@
 flask
+peewee
+peewee-migrations
 prometheus_client
 prometheus_flask_exporter
 requests
 requests-cache
 redis
 python-redis-lock
-uwsgi

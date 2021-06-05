@@ -1,0 +1,30 @@
+services:
+  backend:
+    build: .
+    image: thedrhax/mosmetro-backend:2.2
+    ports:
+      - "5000:5000"
+      # - "80:80"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app
+      - MOSMETRO_REDIS=redis
+      - MOSMETRO_SQL=postgresql://postgres:root@postgres:5432/postgres
+    working_dir: /app
+    volumes:
+      - ./app:/app/app:ro
+    command: flask run --host=0.0.0.0
+  redis:
+    image: redis
+  postgres:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: root
+  grafana:
+    image: grafana/grafana:7.2.2
+    ports:
+      - "3000:3000"
+volumes:
+  grafana:
