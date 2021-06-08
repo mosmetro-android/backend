@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+from peewee import IntegrityError
 from .. import branches
+from ..models.base import db
 from ..models.metrics import MetricDownload, MetricUpdateCheck
 
 from flask import url_for, Blueprint, render_template, request, abort, jsonify
@@ -24,10 +26,11 @@ def branches_php():
         branch['cached_url'] = '{0}/{1[filename]}'.format(cached, branch)
         branch['url'] = '{0}?branch={1[name]}'.format(download, branch)
 
-    try:
-        MetricUpdateCheck().save()
-    except Exception:
-        pass
+    with db.atomic() as transaction:
+        try:
+            MetricUpdateCheck.create()
+        except IntegrityError:
+            transaction.rollback()
 
     return jsonify(data)
 
@@ -43,10 +46,11 @@ def download_php():
     version_key = 'build' if data[branch]['by_build'] == '1' else 'version'
     version = data[branch][version_key]
 
-    try:
-        MetricDownload(branch=branch, version=version).save()
-    except Exception:
-        pass
+    with db.atomic() as transaction:
+        try:
+            MetricDownload.create(branch=branch, version=version)
+        except IntegrityError:
+            transaction.rollback()
 
     url = "/releases/" + data[branch]['filename']
     return render_template('redirect.html', url=url)
