@@ -1,8 +1,6 @@
 from uuid import UUID
 from flask import Blueprint, request
-from peewee import IntegrityError
 from ..models.metrics import MetricConnection
-from ..models.base import db
 
 
 v2 = Blueprint('v2', __name__)
@@ -51,10 +49,6 @@ def statistics():
     if uuid is not None:
         item.uuid = UUID(uuid)
 
-    with db.atomic() as transaction:
-        try:
-            item.save()
-        except IntegrityError:
-            transaction.rollback()
+    item.save()
 
     return ''
