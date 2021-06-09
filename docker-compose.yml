@@ -1,7 +1,7 @@
 services:
   backend:
     build: .
-    image: thedrhax/mosmetro-backend:2.2.2
+    image: thedrhax/mosmetro-backend:2.2.3
     ports:
       - "5000:5000"
       # - "80:80"
